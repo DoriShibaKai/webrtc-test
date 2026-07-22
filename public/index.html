@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+  <title>WebRTCカメラ</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #f3f4f6;
+      color: #222;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    }
+
+    .container {
+      width: min(900px, 100%);
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 26px;
+    }
+
+    .panel {
+      margin-bottom: 16px;
+      padding: 16px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      margin-bottom: 14px;
+      padding: 12px;
+      border: 1px solid #aaa;
+      border-radius: 8px;
+      font-size: 17px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    button {
+      min-height: 56px;
+      padding: 12px;
+      border: 0;
+      border-radius: 10px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #sendButton {
+      background: #1769e0;
+      color: white;
+    }
+
+    #viewButton {
+      background: #15803d;
+      color: white;
+    }
+
+    #stopButton {
+      width: 100%;
+      margin-top: 12px;
+      background: #d1d5db;
+      color: #222;
+    }
+
+    button:disabled {
+      cursor: default;
+      opacity: 0.5;
+    }
+
+    #status {
+      min-height: 48px;
+      margin: 0;
+      padding: 12px;
+      background: #fff7d6;
+      border-radius: 8px;
+      white-space: pre-wrap;
+    }
+
+    video {
+      display: block;
+      width: 100%;
+      max-height: 70vh;
+      margin-top: 14px;
+      background: black;
+      border-radius: 10px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .note {
+      margin-bottom: 0;
+      color: #555;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 12px;
+      }
+
+      .buttons {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <h1>WebRTCカメラ</h1>
+
+    <section class="panel">
+      <label for="roomName">接続する部屋名</label>
+
+      <input
+        id="roomName"
+        type="text"
+        value="home-camera"
+        maxlength="50"
+        autocomplete="off"
+      >
+
+      <div class="buttons">
+        <button id="sendButton" type="button">
+          iPhoneからカメラを送る
+        </button>
+
+        <button id="viewButton" type="button">
+          パソコンで映像を見る
+        </button>
+      </div>
+
+      <button id="stopButton" type="button" disabled>
+        接続を終了
+      </button>
+
+      <p class="note">
+        iPhoneとパソコンで同じ部屋名を使ってください。
+        最初は「home-camera」のままで構いません。
+      </p>
+    </section>
+
+    <section class="panel">
+      <p id="status">どちらかのボタンを押してください。</p>
+
+      <video
+        id="video"
+        autoplay
+        playsinline
+        muted
+        class="hidden"
+      ></video>
+    </section>
+  </main>
+
+  <script>
+    "use strict";
+
+    const roomInput = document.getElementById("roomName");
+    const sendButton = document.getElementById("sendButton");
+    const viewButton = document.getElementById("viewButton");
+    const stopButton = document.getElementById("stopButton");
+    const statusElement = document.getElementById("status");
+    const videoElement = document.getElementById("video");
+
+    let role = null;
+    let socket = null;
+    let peerConnection = null;
+    let localStream = null;
+    let offerStarted = false;
+
+    const rtcConfiguration = {
+      iceServers: [
+        {
+          urls: [
+            "stun:stun.l.google.com:19302",
+            "stun:stun1.l.google.com:19302"
+          ]
+        }
+      ]
+    };
+
+    function setStatus(message) {
+      statusElement.textContent = message;
+      console.log(message);
+    }
+
+    function setControlsConnected() {
+      sendButton.disabled = true;
+      viewButton.disabled = true;
+      roomInput.disabled = true;
+      stopButton.disabled = false;
+    }
+
+    function setControlsDisconnected() {
+      sendButton.disabled = false;
+      viewButton.disabled = false;
+      roomInput.disabled = false;
+      stopButton.disabled = true;
+    }
+
+    function getRoomName() {
+      const roomName = roomInput.value.trim();
+
+      if (!roomName) {
+        throw new Error("部屋名を入力してください。");
+      }
+
+      return roomName;
+    }
+
+    function createPeerConnection() {
+      peerConnection = new RTCPeerConnection(rtcConfiguration);
+
+      peerConnection.onicecandidate = event => {
+        if (!event.candidate) {
+          return;
+        }
+
+        sendSignal({
+          type: "ice-candidate",
+          candidate: event.candidate
+        });
+      };
+
+      peerConnection.ontrack = event => {
+        if (role !== "viewer") {
+          return;
+        }
+
+        const [remoteStream] = event.streams;
+
+        if (remoteStream) {
+          videoElement.srcObject = remoteStream;
+        } else {
+          const stream = new MediaStream();
+          stream.addTrack(event.track);
+          videoElement.srcObject = stream;
+        }
+
+        videoElement.muted = false;
+        videoElement.classList.remove("hidden");
+
+        videoElement.play().catch(() => {
+          setStatus(
+            "映像を受信しました。\n" +
+            "再生されない場合は、黒い映像部分を一度押してください。"
+          );
+        });
+      };
+
+      peerConnection.onconnectionstatechange = () => {
+        const state = peerConnection.connectionState;
+
+        if (state === "connected") {
+          setStatus(
+            role === "sender"
+              ? "接続成功：iPhoneの映像を送信しています。"
+              : "接続成功：iPhoneの映像を受信しています。"
+          );
+        } else if (state === "disconnected") {
+          setStatus("通信が一時的に切断されました。");
+        } else if (state === "failed") {
+          setStatus(
+            "WebRTC接続に失敗しました。\n" +
+            "いったん接続を終了し、両方でやり直してください。"
+          );
+        } else if (state === "closed") {
+          setStatus("接続を終了しました。");
+        }
+      };
+
+      return peerConnection;
+    }
+
+    function sendSignal(data) {
+      if (!socket || socket.readyState !== WebSocket.OPEN) {
+        return;
+      }
+
+      socket.send(JSON.stringify(data));
+    }
+
+    function connectWebSocket(roomName) {
+      return new Promise((resolve, reject) => {
+        const protocol =
+          location.protocol === "https:" ? "wss:" : "ws:";
+
+        const socketUrl =
+          protocol +
+          "//" +
+          location.host +
+          "/ws/" +
+          encodeURIComponent(roomName);
+
+        socket = new WebSocket(socketUrl);
+
+        socket.onopen = () => {
+          sendSignal({
+            type: "role",
+            role
+          });
+
+          if (role === "sender") {
+            sendSignal({
+              type: "sender-ready"
+            });
+
+            setStatus(
+              "カメラを準備しました。\n" +
+              "パソコン側の接続を待っています。"
+            );
+          } else {
+            sendSignal({
+              type: "viewer-ready"
+            });
+
+            setStatus(
+              "受信準備ができました。\n" +
+              "iPhone側の接続を待っています。"
+            );
+          }
+
+          resolve();
+        };
+
+        socket.onmessage = async event => {
+          try {
+            const message = JSON.parse(event.data);
+            await handleSignal(message);
+          } catch (error) {
+            console.error(error);
+            setStatus("接続情報の処理中にエラーが発生しました。");
+          }
+        };
+
+        socket.onerror = () => {
+          reject(
+            new Error("Cloudflareへの接続に失敗しました。")
+          );
+        };
+
+        socket.onclose = () => {
+          if (role !== null) {
+            setStatus("Cloudflareとの接続が終了しました。");
+          }
+        };
+      });
+    }
+
+    async function handleSignal(message) {
+      if (message.type === "joined") {
+        return;
+      }
+
+      if (message.type === "peer-joined") {
+        if (role === "sender") {
+          sendSignal({ type: "sender-ready" });
+        } else if (role === "viewer") {
+          sendSignal({ type: "viewer-ready" });
+        }
+
+        return;
+      }
+
+      if (
+        message.type === "sender-ready" &&
+        role === "viewer"
+      ) {
+        sendSignal({ type: "viewer-ready" });
+        return;
+      }
+
+      if (
+        message.type === "viewer-ready" &&
+        role === "sender"
+      ) {
+        await createAndSendOffer();
+        return;
+      }
+
+      if (
+        message.type === "offer" &&
+        role === "viewer"
+      ) {
+        await receiveOffer(message);
+        return;
+      }
+
+      if (
+        message.type === "answer" &&
+        role === "sender"
+      ) {
+        await peerConnection.setRemoteDescription(
+          message.answer
+        );
+
+        return;
+      }
+
+      if (message.type === "ice-candidate") {
+        if (!peerConnection) {
+          return;
+        }
+
+        try {
+          await peerConnection.addIceCandidate(
+            message.candidate
+          );
+        } catch (error) {
+          console.error("ICE Candidate error:", error);
+        }
+
+        return;
+      }
+
+      if (message.type === "peer-left") {
+        setStatus(
+          "相手側の接続が終了しました。\n" +
+          "両方で接続を終了してから、もう一度接続してください。"
+        );
+      }
+    }
+
+    async function createAndSendOffer() {
+      if (
+        role !== "sender" ||
+        !peerConnection ||
+        offerStarted
+      ) {
+        return;
+      }
+
+      offerStarted = true;
+
+      try {
+        const offer =
+          await peerConnection.createOffer();
+
+        await peerConnection.setLocalDescription(offer);
+
+        sendSignal({
+          type: "offer",
+          offer: peerConnection.localDescription
+        });
+
+        setStatus("パソコンとWebRTC接続を開始しています。");
+      } catch (error) {
+        offerStarted = false;
+        throw error;
+      }
+    }
+
+    async function receiveOffer(message) {
+      if (!peerConnection) {
+        createPeerConnection();
+
+        peerConnection.addTransceiver("video", {
+          direction: "recvonly"
+        });
+
+        peerConnection.addTransceiver("audio", {
+          direction: "recvonly"
+        });
+      }
+
+      await peerConnection.setRemoteDescription(
+        message.offer
+      );
+
+      const answer =
+        await peerConnection.createAnswer();
+
+      await peerConnection.setLocalDescription(answer);
+
+      sendSignal({
+        type: "answer",
+        answer: peerConnection.localDescription
+      });
+
+      setStatus("iPhoneからの映像を接続しています。");
+    }
+
+    async function startSender() {
+      try {
+        role = "sender";
+        offerStarted = false;
+        setControlsConnected();
+
+        setStatus(
+          "iPhoneのカメラ使用許可を確認しています。"
+        );
+
+        localStream =
+          await navigator.mediaDevices.getUserMedia({
+            video: {
+              facingMode: {
+                ideal: "environment"
+              },
+              width: {
+                ideal: 1280
+              },
+              height: {
+                ideal: 720
+              }
+            },
+            audio: true
+          });
+
+        videoElement.srcObject = localStream;
+        videoElement.muted = true;
+        videoElement.classList.remove("hidden");
+        await videoElement.play();
+
+        createPeerConnection();
+
+        for (const track of localStream.getTracks()) {
+          peerConnection.addTrack(track, localStream);
+        }
+
+        await connectWebSocket(getRoomName());
+      } catch (error) {
+        console.error(error);
+        setStatus(
+          "カメラを開始できませんでした。\n" +
+          error.message
+        );
+        stopAll(false);
+      }
+    }
+
+    async function startViewer() {
+      try {
+        role = "viewer";
+        offerStarted = false;
+        setControlsConnected();
+
+        createPeerConnection();
+
+        peerConnection.addTransceiver("video", {
+          direction: "recvonly"
+        });
+
+        peerConnection.addTransceiver("audio", {
+          direction: "recvonly"
+        });
+
+        await connectWebSocket(getRoomName());
+      } catch (error) {
+        console.error(error);
+        setStatus(
+          "受信を開始できませんでした。\n" +
+          error.message
+        );
+        stopAll(false);
+      }
+    }
+
+    function stopAll(showMessage = true) {
+      role = null;
+      offerStarted = false;
+
+      if (socket) {
+        socket.onclose = null;
+        socket.close();
+        socket = null;
+      }
+
+      if (peerConnection) {
+        peerConnection.close();
+        peerConnection = null;
+      }
+
+      if (localStream) {
+        for (const track of localStream.getTracks()) {
+          track.stop();
+        }
+
+        localStream = null;
+      }
+
+      videoElement.pause();
+      videoElement.srcObject = null;
+      videoElement.classList.add("hidden");
+      videoElement.muted = true;
+
+      setControlsDisconnected();
+
+      if (showMessage) {
+        setStatus("接続を終了しました。");
+      }
+    }
+
+    sendButton.addEventListener("click", startSender);
+    viewButton.addEventListener("click", startViewer);
+    stopButton.addEventListener("click", () => stopAll(true));
+
+    window.addEventListener("beforeunload", () => {
+      stopAll(false);
+    });
+  </script>
+</body>
+</html>
