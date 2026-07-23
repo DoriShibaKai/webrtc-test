@@ -355,7 +355,11 @@
         if (state === "connected") {
 
           console.log("★★★ connected ★★★");
-          console.log(driveChannel);
+         console.log(driveChannel);
+
+if (driveChannel) {
+    console.log("状態", driveChannel.readyState);
+}
           
           setStatus(
             role === "sender"
