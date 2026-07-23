@@ -936,44 +936,6 @@ window.addEventListener("pointerup", event => {
 });
 
 
-  const rect = videoWrapper.getBoundingClientRect();
-
-  const pointerX = event.clientX - rect.left;
-  const pointerY = event.clientY - rect.top;
-
-  let dx = pointerX - joystickCenterX;
-  let dy = pointerY - joystickCenterY;
-
-  const distance = Math.sqrt(dx * dx + dy * dy);
-
-  if (distance > maxKnobDistance) {
-    dx = dx / distance * maxKnobDistance;
-    dy = dy / distance * maxKnobDistance;
-  }
-
-  joystickKnob.style.left = (joystickRadius + dx) + "px";
-  joystickKnob.style.top = (joystickRadius + dy) + "px";
-
-  const x = dx / maxKnobDistance;
-  const y = -dy / maxKnobDistance;
-
-  xyDisplay.textContent =
-    "X：" + x.toFixed(2) + "　Y：" + y.toFixed(2);
-
-  if (driveChannel && driveChannel.readyState === "open") {
-  driveSequence++;
-
-  const driveData = {
-    type: "drive",
-    x: Number(x.toFixed(2)),
-    y: Number(y.toFixed(2)),
-    sequence: driveSequence
-  };
-
-  driveChannel.send(JSON.stringify(driveData));
-}
-});
-
     
     sendButton.addEventListener("click", startSender);
     viewButton.addEventListener("click", startViewer);
