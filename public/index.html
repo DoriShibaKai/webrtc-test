@@ -283,7 +283,15 @@
 }
 
 #settingsPanel[open] summary {
-  border-bottom: 1px solid #e0e0e0;
+
+  background: #1769e0;
+  color: #ffffff;
+
+  border-bottom: 1px solid #1769e0;
+}
+
+#settingsPanel[open] summary::before {
+  color: #ffffff;
 }
 
 .settingsContent {
@@ -392,18 +400,31 @@
 ====================================== */
 
 .settingsActionButton {
+
   width: 100%;
   min-height: 52px;
   padding: 12px;
 
-  border: 1px solid #8b8b8b;
+  border: 1px solid #1769e0;
   border-radius: 8px;
 
-  background: #ffffff;
-  color: #222222;
+  background: #1769e0;
+  color: #ffffff;
 
   font-size: 17px;
   font-weight: bold;
+
+  transition:
+    background-color 0.2s,
+    transform 0.15s;
+}
+
+.settingsActionButton:hover {
+  background: #1457ba;
+}
+
+.settingsActionButton:active {
+  transform: scale(0.98);
 }
 
 .settingsActionDescription {
