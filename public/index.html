@@ -855,17 +855,17 @@ if (driveChannel) {
   xyDisplay.textContent =
     "X：" + x.toFixed(2) + "　Y：" + y.toFixed(2);
 
-  if (dataChannel && dataChannel.readyState === "open") {
-    driveSequence++;
+  if (driveChannel && driveChannel.readyState === "open") {
+  driveSequence++;
 
-    const driveData = {
-      type: "drive",
-      x: Number(x.toFixed(2)),
-      y: Number(y.toFixed(2)),
-      sequence: driveSequence
-    };
+  const driveData = {
+    type: "drive",
+    x: Number(x.toFixed(2)),
+    y: Number(y.toFixed(2)),
+    sequence: driveSequence
+  };
 
-    dataChannel.send(JSON.stringify(driveData));
+  driveChannel.send(JSON.stringify(driveData));
 }
 });
 
