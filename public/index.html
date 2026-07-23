@@ -359,27 +359,7 @@
     console.error("iPhone側 DataChannel error", error);
   };
 
-  driveChannel.onmessage = event => {
-  console.log("受信", event.data);
-
-  try {
-    const command = JSON.parse(event.data);
-
-    console.log("受信した命令", command);
-
-    if (command.type === "drive") {
-      driveStatusElement.textContent =
-  "操縦命令を受信しました。\n" +
-  "X：" + command.x + "\n" +
-  "Y：" + command.y + "\n" +
-  "sequence：" + command.sequence;
-    }
-
-  } catch (error) {
-    console.error("受信データをJSONとして読めませんでした");
-    setStatus("受信データの読み取りに失敗しました。");
-  }
-};
+  driveChannel.onmessage = handleDriveChannelMessage;
 
 }
 
@@ -427,6 +407,8 @@
   driveChannel.onerror = error => {
     console.error("PC側 DataChannel error", error);
   };
+
+    driveChannel.onmessage = handleDriveChannelMessage;
 
 };
 
@@ -873,6 +855,81 @@ joystickArea.style.display = "none";
       joystickActive = false;
 }
 
+function applyDriveStopState(stopped) {
+  driveStopped = stopped;
+  joystickActive = false;
+
+  if (stopped) {
+    xyDisplay.textContent = "X：0.00　Y：0.00";
+
+    joystickKnob.style.left = "50%";
+    joystickKnob.style.top = "50%";
+
+    driveStopButton.textContent = "STOP解除";
+
+    driveStatusElement.textContent =
+      "非常停止中です。\n" +
+      "再開するには「STOP解除」を押してください。";
+
+  } else {
+    driveStopButton.textContent = "STOP";
+
+    driveStatusElement.textContent =
+      "非常停止を解除しました。\n" +
+      "映像上をクリックして操作を再開してください。";
+  }
+}
+
+    function sendDriveStopState(stopped) {
+  if (
+    !driveChannel ||
+    driveChannel.readyState !== "open"
+  ) {
+    return;
+  }
+
+  driveSequence++;
+
+  const stopStateData = {
+    type: "drive-stop-state",
+    stopped: stopped,
+    sequence: driveSequence
+  };
+
+  driveChannel.send(JSON.stringify(stopStateData));
+}
+
+    function handleDriveChannelMessage(event) {
+  console.log("受信", event.data);
+
+  try {
+    const command = JSON.parse(event.data);
+
+    console.log("受信した命令", command);
+
+    if (command.type === "drive-stop-state") {
+      applyDriveStopState(command.stopped === true);
+      return;
+    }
+
+    if (command.type === "drive") {
+      driveStatusElement.textContent =
+        "操縦命令を受信しました。\n" +
+        "X：" + command.x + "\n" +
+        "Y：" + command.y + "\n" +
+        "sequence：" + command.sequence;
+    }
+
+  } catch (error) {
+    console.error(
+      "受信データをJSONとして読めませんでした",
+      error
+    );
+
+    setStatus("受信データの読み取りに失敗しました。");
+  }
+}
+
    videoWrapper.addEventListener("pointermove", event => {
   if (
   role !== "viewer" ||
@@ -933,37 +990,27 @@ sendButton.addEventListener("click", startSender);
 viewButton.addEventListener("click", startViewer);
 
 driveStopButton.addEventListener("click", () => {
-  if (!driveStopped) {
-    // STOPを有効にする
-    driveStopped = true;
+  const newStoppedState = !driveStopped;
 
-    // X=0，Y=0を送信し，白い丸も中央へ戻す
+  if (newStoppedState) {
+    // この端末を非常停止状態にする
+    applyDriveStopState(true);
+
+    // X=0，Y=0を相手側へ送る
     sendStopCommand();
 
-    // STOP中であることをボタンに表示する
-    driveStopButton.textContent = "STOP解除";
-
-    // 状態を画面にも表示する
-    driveStatusElement.textContent =
-      "非常停止中です。\n" +
-      "再開するには「STOP解除」を押してください。";
+    // 相手側のSTOP表示も有効にする
+    sendDriveStopState(true);
 
   } else {
-    // STOPを解除する
-    driveStopped = false;
+    // この端末の非常停止を解除する
+    applyDriveStopState(false);
 
-    // 新しいクリックから操作を始めさせる
-    joystickActive = false;
-
-    // ボタン表示を元に戻す
-    driveStopButton.textContent = "STOP";
-
-    driveStatusElement.textContent =
-      "非常停止を解除しました。\n" +
-      "映像上をクリックして操作を再開してください。";
+    // 相手側のSTOP表示も解除する
+    sendDriveStopState(false);
   }
 });
-
+    
 stopButton.addEventListener("click", () => stopAll(true));
 
     window.addEventListener("beforeunload", () => {
