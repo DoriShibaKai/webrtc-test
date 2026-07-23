@@ -291,18 +291,32 @@
         });
       };
 
-      peerConnection.ondatachannel = event => {
+  peerConnection.ondatachannel = event => {
 
   driveChannel = event.channel;
 
   driveChannel.onopen = () => {
-    console.log("Drive DataChannel 接続");
+    console.log("Ver 2");
+    console.log("iPhone側 Drive DataChannel 接続");
+    console.log("iPhone側の状態", driveChannel.readyState);
   };
 
   driveChannel.onclose = () => {
     console.log("Drive DataChannel 切断");
   };
 
+  driveChannel.onmessage = event => {
+    console.log("受信", event.data);
+
+    try {
+      const command = JSON.parse(event.data);
+      console.log("受信した命令", command);
+    } catch (error) {
+      console.error("受信データをJSONとして読めませんでした");
+    }
+  };
+
+};
   driveChannel.onmessage = event => {
 
     console.log("受信", event.data);
