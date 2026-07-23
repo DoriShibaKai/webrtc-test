@@ -295,7 +295,7 @@
       console.log(message);
     }
 
-   function setControlsConnected() {
+  function setControlsConnected() {
   sendButton.disabled = true;
   viewButton.disabled = true;
   roomInput.disabled = true;
@@ -303,7 +303,8 @@
   driveStopped = false;
   joystickActive = false;
 
-  driveStopButton.disabled = false;
+  // DataChannelが開くまではSTOPを押せない
+  driveStopButton.disabled = true;
   driveStopButton.textContent = "STOP";
 
   stopButton.disabled = false;
@@ -343,9 +344,15 @@
   );
 
   driveChannel.onopen = () => {
-    console.log("iPhone側 DataChannel 接続");
-    console.log("iPhone側の状態", driveChannel.readyState);
-  };
+  console.log("送り手側 DataChannel 接続");
+  console.log("送り手側の状態", driveChannel.readyState);
+
+  driveStopButton.disabled = false;
+
+  driveStatusElement.textContent =
+    "操縦接続が完了しました。\n" +
+    "STOPを使用できます。";
+};
 
   driveChannel.onclosing = () => {
     console.log("iPhone側 DataChannel closing");
@@ -386,14 +393,17 @@
   );
 
   driveChannel.onopen = () => {
-  console.log("PC側 DataChannel 接続");
-  console.log("PC側の状態", driveChannel.readyState);
+  console.log("受け手側 DataChannel 接続");
+  console.log("受け手側の状態", driveChannel.readyState);
 
+  driveStopButton.disabled = false;
+
+  // 接続直後はX=0，Y=0を送る
   sendStopCommand();
 
   driveStatusElement.textContent =
     "操縦接続が完了しました。\n" +
-    "停止状態から開始します。";
+    "停止位置から開始します。";
 };
 
   driveChannel.onclosing = () => {
