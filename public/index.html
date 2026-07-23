@@ -406,21 +406,15 @@
   );
 
   driveChannel.onopen = () => {
-    console.log("Ver 4");
-    console.log("PC側 DataChannel 接続");
-    console.log("PC側の状態", driveChannel.readyState);
+  console.log("PC側 DataChannel 接続");
+  console.log("PC側の状態", driveChannel.readyState);
 
-    const command = {
-      type: "drive",
-      x: 0.5,
-      y: 0.8,
-      sequence: 1
-    };
+  sendStopCommand();
 
-    driveChannel.send(JSON.stringify(command));
-
-    console.log("PC側から送信", command);
-  };
+  driveStatusElement.textContent =
+    "操縦接続が完了しました。\n" +
+    "停止状態から開始します。";
+};
 
   driveChannel.onclosing = () => {
     console.log("PC側 DataChannel closing");
@@ -909,8 +903,7 @@ joystickArea.style.display = "none";
   joystickKnob.style.top =
     (joystickRadius + dy) + "px";
 
-     console.log("left =", joystickKnob.style.left);
-      console.log("top  =", joystickKnob.style.top);
+    
 
   const x = dx / maxKnobDistance;
   const y = -dy / maxKnobDistance;
