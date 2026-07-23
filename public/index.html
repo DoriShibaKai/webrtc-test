@@ -200,6 +200,7 @@
     let peerConnection = null;
     let localStream = null;
     let offerStarted = false;
+    let driveChannel = null;
 
     const rtcConfiguration = {
       iceServers: [
@@ -243,6 +244,23 @@
 
     function createPeerConnection() {
       peerConnection = new RTCPeerConnection(rtcConfiguration);
+
+      if (role === "viewer") {
+
+  driveChannel =
+    peerConnection.createDataChannel("drive");
+
+  driveChannel.onopen = () => {
+    console.log("Drive DataChannel 接続");
+  };
+
+  driveChannel.onclose = () => {
+    console.log("Drive DataChannel 切断");
+  };
+
+}
+
+      
 
       peerConnection.onicecandidate = event => {
         if (!event.candidate) {
