@@ -259,6 +259,7 @@
     let joystickCenterX = 0;
     let joystickCenterY = 0;
     let joystickActive = false;
+    let driveSequence = 0;
 
     const joystickRadius = 70;
     const knobRadius = 25;
@@ -853,6 +854,19 @@ if (driveChannel) {
 
   xyDisplay.textContent =
     "X：" + x.toFixed(2) + "　Y：" + y.toFixed(2);
+
+  if (dataChannel && dataChannel.readyState === "open") {
+    driveSequence++;
+
+    const driveData = {
+      type: "drive",
+      x: Number(x.toFixed(2)),
+      y: Number(y.toFixed(2)),
+      sequence: driveSequence
+    };
+
+    dataChannel.send(JSON.stringify(driveData));
+}
 });
 
     
