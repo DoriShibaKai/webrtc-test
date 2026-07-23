@@ -265,6 +265,7 @@
     let joystickCenterX = 0;
     let joystickCenterY = 0;
     let joystickActive = false;
+    let driveStopped = false;
     let driveSequence = 0;
 
     const joystickRadius = 70;
@@ -294,13 +295,19 @@
       console.log(message);
     }
 
-    function setControlsConnected() {
-      sendButton.disabled = true;
-      viewButton.disabled = true;
-      roomInput.disabled = true;
-      driveStopButton.disabled = false;
-      stopButton.disabled = false;
-    }
+   function setControlsConnected() {
+  sendButton.disabled = true;
+  viewButton.disabled = true;
+  roomInput.disabled = true;
+
+  driveStopped = false;
+  joystickActive = false;
+
+  driveStopButton.disabled = false;
+  driveStopButton.textContent = "STOP";
+
+  stopButton.disabled = false;
+}
 
     function setControlsDisconnected() {
       sendButton.disabled = false;
@@ -802,7 +809,10 @@ if (driveChannel) {
       videoElement.muted = true;
 
       joystickActive = false;
-      joystickArea.style.display = "none";
+driveStopped = false;
+
+driveStopButton.textContent = "STOP";
+joystickArea.style.display = "none";
 
       joystickKnob.style.left = "50%";
       joystickKnob.style.top = "50%";
@@ -817,9 +827,9 @@ if (driveChannel) {
     }
 
     videoWrapper.addEventListener("pointerdown", event => {
-  if (role !== "viewer") {
-    return;
-  }
+  if (role !== "viewer" || driveStopped) {
+  return;
+}
 
   const rect = videoWrapper.getBoundingClientRect();
 
@@ -870,9 +880,13 @@ if (driveChannel) {
 }
 
    videoWrapper.addEventListener("pointermove", event => {
-  if (role !== "viewer" || !joystickActive) {
-    return;
-  }
+  if (
+  role !== "viewer" ||
+  !joystickActive ||
+  driveStopped
+) {
+  return;
+}
 
   const rect = videoWrapper.getBoundingClientRect();
 
@@ -926,9 +940,35 @@ sendButton.addEventListener("click", startSender);
 viewButton.addEventListener("click", startViewer);
 
 driveStopButton.addEventListener("click", () => {
-  sendStopCommand();
+  if (!driveStopped) {
+    // STOPを有効にする
+    driveStopped = true;
 
-  joystickActive = true;
+    // X=0，Y=0を送信し，白い丸も中央へ戻す
+    sendStopCommand();
+
+    // STOP中であることをボタンに表示する
+    driveStopButton.textContent = "STOP解除";
+
+    // 状態を画面にも表示する
+    driveStatusElement.textContent =
+      "非常停止中です。\n" +
+      "再開するには「STOP解除」を押してください。";
+
+  } else {
+    // STOPを解除する
+    driveStopped = false;
+
+    // 新しいクリックから操作を始めさせる
+    joystickActive = false;
+
+    // ボタン表示を元に戻す
+    driveStopButton.textContent = "STOP";
+
+    driveStatusElement.textContent =
+      "非常停止を解除しました。\n" +
+      "映像上をクリックして操作を再開してください。";
+  }
 });
 
 stopButton.addEventListener("click", () => stopAll(true));
