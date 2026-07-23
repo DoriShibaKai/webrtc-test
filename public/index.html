@@ -142,8 +142,10 @@
     
     #joystickArea {
     position: absolute;
-    right: 20px;
-    bottom: 20px;
+    left: 0;
+    top: 0;
+    transform: translate(-50%, -50%);
+    display: none;
 
     width: 140px;
     height: 140px;
@@ -248,6 +250,9 @@
     const statusElement = document.getElementById("status");
     const driveStatusElement = document.getElementById("driveStatus");
     const videoElement = document.getElementById("video");
+    const videoWrapper = document.getElementById("videoWrapper");
+    const joystickArea = document.getElementById("joystickArea");
+    const joystickKnob = document.getElementById("joystickKnob");
 
     let role = null;
     let socket = null;
@@ -784,6 +789,18 @@ if (driveChannel) {
       }
     }
 
+    videoWrapper.addEventListener("pointerdown", event => {
+    const rect = videoWrapper.getBoundingClientRect();
+
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    joystickArea.style.left = x + "px";
+    joystickArea.style.top = y + "px";
+    joystickArea.style.display = "block";
+    });
+
+    
     sendButton.addEventListener("click", startSender);
     viewButton.addEventListener("click", startViewer);
     stopButton.addEventListener("click", () => stopAll(true));
