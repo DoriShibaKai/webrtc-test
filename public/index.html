@@ -138,6 +138,7 @@
 
     #videoWrapper {
   position: relative;
+  touch-action: none;
     }
     
     #joystickArea {
@@ -801,6 +802,10 @@ if (driveChannel) {
     }
 
     videoWrapper.addEventListener("pointerdown", event => {
+  if (role !== "viewer") {
+    return;
+  }
+
   const rect = videoWrapper.getBoundingClientRect();
 
     joystickCenterX = Math.max(
@@ -826,8 +831,8 @@ if (driveChannel) {
   xyDisplay.textContent = "X：0.00　Y：0.00";
 });
 
-    videoWrapper.addEventListener("pointermove", event => {
-  if (!joystickActive) {
+   videoWrapper.addEventListener("pointermove", event => {
+  if (role !== "viewer" || !joystickActive) {
     return;
   }
 
