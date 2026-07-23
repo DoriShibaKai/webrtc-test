@@ -91,13 +91,63 @@
       color: #222;
     }
 
-    #driveStopButton {
-      width: 100%;
-      margin-top: 12px;
-      touch-action: manipulation;
-      user-select: none;
-      -webkit-user-select: none;
-    }
+   #driveStopButton {
+  position: absolute;
+  left: 68%;
+  top: 4%;
+  width: 28%;
+  height: 15%;
+
+  min-width: 100px;
+  min-height: 52px;
+
+  margin: 0;
+  padding: 8px;
+
+  z-index: 30;
+
+  background: #dc2626;
+  color: #ffffff;
+
+  border: 3px solid #ffffff;
+  border-radius: 12px;
+
+  font-size: 20px;
+  font-weight: bold;
+
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#driveStopButtonText {
+  pointer-events: none;
+}
+
+#stopResizeHandle {
+  display: none;
+
+  position: absolute;
+  right: 2px;
+  bottom: 0;
+
+  width: 32px;
+  height: 32px;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 8px 0 8px 0;
+
+  background: rgba(0, 0, 0, 0.45);
+  color: #ffffff;
+
+  font-size: 22px;
+  line-height: 1;
+
+  cursor: nwse-resize;
+  touch-action: none;
+}
 
     button:disabled {
       cursor: default;
@@ -146,8 +196,15 @@
 
     #videoWrapper {
   position: relative;
+  overflow: hidden;
+
+  width: 100%;
+
+  background: #000000;
+  border-radius: 10px;
+
   touch-action: none;
-    }
+}
     
     #joystickArea {
     position: absolute;
@@ -250,7 +307,7 @@
   margin-bottom: 12px;
   padding-bottom: 8px;
   border-bottom: 1px solid #e5e5e5;
-  font-size: 17px;
+  font-size: 18px;
   font-weight: bold;
 }
 
@@ -330,7 +387,154 @@
   }
 }
 
+/* ======================================
+   詳細設定内の操作ボタン
+====================================== */
 
+.settingsActionButton {
+  width: 100%;
+  min-height: 52px;
+  padding: 12px;
+
+  border: 1px solid #8b8b8b;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #222222;
+
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.settingsActionDescription {
+  margin: 8px 2px 0;
+}
+
+
+/* ======================================
+   STOPボタン編集画面
+====================================== */
+
+.stopEditorScreen {
+  position: fixed;
+  inset: 0;
+
+  z-index: 1000;
+
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+
+  overflow: auto;
+
+  background: #f3f4f6;
+}
+
+.stopEditorHeader {
+  position: sticky;
+  top: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  min-height: 64px;
+  padding:
+    max(8px, env(safe-area-inset-top))
+    16px
+    8px;
+
+  z-index: 1010;
+
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid #d1d5db;
+}
+
+.stopEditorTitle {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.finishStopEditorButton {
+  width: 48px;
+  min-height: 44px;
+  padding: 0;
+
+  border-radius: 22px;
+
+  background: #1769e0;
+  color: #ffffff;
+
+  font-size: 27px;
+  line-height: 1;
+}
+
+.stopEditorMessage {
+  padding: 14px 16px;
+
+  background: #fff7d6;
+  color: #222222;
+
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+#stopEditorStage {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  width: 100%;
+  padding: 16px;
+}
+
+#stopEditorStage #videoWrapper {
+  width: min(100%, 1000px);
+
+  aspect-ratio: 16 / 9;
+  min-height: 240px;
+
+  background: #000000;
+  border: 2px solid #777777;
+  border-radius: 12px;
+}
+
+#stopEditorStage #videoWrapper video {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+
+  object-fit: contain;
+  border-radius: 0;
+}
+
+#videoWrapper.stopButtonEditing #driveStopButton {
+  cursor: move;
+
+  border: 3px dashed #ffffff;
+  box-shadow:
+    0 0 0 3px rgba(23, 105, 224, 0.9),
+    0 5px 16px rgba(0, 0, 0, 0.4);
+}
+
+#videoWrapper.stopButtonEditing #stopResizeHandle {
+  display: flex;
+}
+
+@media (max-width: 600px) {
+  .stopEditorTitle {
+    font-size: 19px;
+  }
+
+  .stopEditorMessage {
+    font-size: 14px;
+  }
+
+  #stopEditorStage {
+    padding: 10px;
+  }
+}
 
   </style>
 </head>
@@ -360,9 +564,7 @@
         </button>
       </div>
 
-      <button id="driveStopButton" type="button" disabled>
-        STOP
-      </button>
+     
       
       <button id="stopButton" type="button" disabled>
         接続を終了
@@ -380,29 +582,24 @@
 
   <div class="settingsContent">
 
-    <!-- STOPボタン -->
-    <section class="settingsSection">
-      <div class="settingsSectionTitle">
-        STOPボタン
-      </div>
+ <!-- STOPボタン -->
+<section class="settingsSection">
+  <div class="settingsSectionTitle">
+    STOPボタン
+  </div>
 
-      <label class="settingsToggleRow">
-        <div class="settingsText">
-          <span class="settingsLabel">
-            配置・サイズを変更する
-          </span>
+  <button
+    type="button"
+    id="openStopEditorButton"
+    class="settingsActionButton"
+  >
+    STOPボタンを編集する
+  </button>
 
-          <span class="settingsDescription">
-            STOPボタンを移動・拡大・縮小できる状態にします
-          </span>
-        </div>
-
-        <input
-          type="checkbox"
-          id="editStopButton"
-        >
-      </label>
-    </section>
+  <p class="settingsDescription settingsActionDescription">
+    映像画面を確認しながら，STOPボタンの位置と大きさを変更します。
+  </p>
+</section>
 
     <!-- PC設定 -->
     <section class="settingsSection">
@@ -512,8 +709,53 @@
   <div id="joystickArea">
     <div id="joystickKnob"></div>
   </div>
+
+  <button
+    id="driveStopButton"
+    type="button"
+    disabled
+  >
+    <span id="driveStopButtonText">
+      STOP
+    </span>
+
+    <span
+      id="stopResizeHandle"
+      aria-hidden="true"
+    >
+      ↘
+    </span>
+  </button>
 </div>
     </section>
+
+
+    <div
+  id="stopEditorScreen"
+  class="stopEditorScreen hidden"
+>
+  <header class="stopEditorHeader">
+    <div class="stopEditorTitle">
+      STOPボタン編集
+    </div>
+
+    <button
+      type="button"
+      id="finishStopEditorButton"
+      class="finishStopEditorButton"
+      aria-label="編集を完了する"
+    >
+      ✓
+    </button>
+  </header>
+
+  <div class="stopEditorMessage">
+    STOPボタン本体をドラッグすると移動できます。<br>
+    右下の矢印をドラッグすると大きさを変更できます。
+  </div>
+
+  <div id="stopEditorStage"></div>
+</div>
   </main>
 
   <script>
@@ -536,8 +778,23 @@
     const settingsPanel =
   document.getElementById("settingsPanel");
 
-const editStopButton =
-  document.getElementById("editStopButton");
+const openStopEditorButton =
+  document.getElementById("openStopEditorButton");
+
+const stopEditorScreen =
+  document.getElementById("stopEditorScreen");
+
+const stopEditorStage =
+  document.getElementById("stopEditorStage");
+
+const finishStopEditorButton =
+  document.getElementById("finishStopEditorButton");
+
+const driveStopButtonText =
+  document.getElementById("driveStopButtonText");
+
+const stopResizeHandle =
+  document.getElementById("stopResizeHandle");
 
 const pcStopKey =
   document.getElementById("pcStopKey");
@@ -550,6 +807,25 @@ const iphoneStopGesture =
     let joystickActive = false;
     let driveStopped = false;
     let driveSequence = 0;
+
+    let stopEditorActive = false;
+let stopEditAction = null;
+
+let stopEditStartX = 0;
+let stopEditStartY = 0;
+
+let stopEditStartLeft = 0;
+let stopEditStartTop = 0;
+let stopEditStartWidth = 0;
+let stopEditStartHeight = 0;
+
+let stopButtonDisabledBeforeEditing = true;
+
+const videoWrapperOriginalParent =
+  videoWrapper.parentNode;
+
+const videoWrapperOriginalNextSibling =
+  videoWrapper.nextSibling;
 
     const joystickRadius = 70;
     const knobRadius = 25;
@@ -588,7 +864,7 @@ const iphoneStopGesture =
 
   // DataChannelが開くまではSTOPを押せない
   driveStopButton.disabled = true;
-  driveStopButton.textContent = "STOP";
+  driveStopButtonText.textContent = "STOP";
 
   stopButton.disabled = false;
 }
@@ -635,6 +911,11 @@ const iphoneStopGesture =
   driveStatusElement.textContent =
     "操縦接続が完了しました。\n" +
     "STOPを使用できます。";
+
+if (settingsPanel.open) {
+  stopDrivingForSettings();
+}
+    
 };
 
   driveChannel.onclosing = () => {
@@ -687,6 +968,10 @@ const iphoneStopGesture =
   driveStatusElement.textContent =
     "操縦接続が完了しました。\n" +
     "停止位置から開始します。";
+
+    if (settingsPanel.open) {
+  stopDrivingForSettings();
+}
 };
 
   driveChannel.onclosing = () => {
@@ -1080,7 +1365,7 @@ if (driveChannel) {
       joystickActive = false;
 driveStopped = false;
 
-driveStopButton.textContent = "STOP";
+driveStopButtonText.textContent = "STOP";
 joystickArea.style.display = "none";
 
       joystickKnob.style.left = "50%";
@@ -1095,10 +1380,15 @@ joystickArea.style.display = "none";
       }
     }
 
-    videoWrapper.addEventListener("pointerdown", event => {
-  if (role !== "viewer" || driveStopped) {
-  return;
-}
+   videoWrapper.addEventListener("pointerdown", event => {
+  if (
+    role !== "viewer" ||
+    driveStopped ||
+    settingsPanel.open ||
+    stopEditorActive
+  ) {
+    return;
+  }
 
   const rect = videoWrapper.getBoundingClientRect();
 
@@ -1158,20 +1448,46 @@ function applyDriveStopState(stopped) {
     joystickKnob.style.left = "50%";
     joystickKnob.style.top = "50%";
 
-    driveStopButton.textContent = "STOP解除";
+    driveStopButtonText.textContent = "STOP解除";
 
     driveStatusElement.textContent =
       "非常停止中です。\n" +
       "再開するには「STOP解除」を押してください。";
 
   } else {
-    driveStopButton.textContent = "STOP";
+    driveStopButtonText.textContent = "STOP";
 
     driveStatusElement.textContent =
       "非常停止を解除しました。\n" +
       "映像上をクリックして操作を再開してください。";
   }
 }
+
+    function stopDrivingForSettings() {
+  if (!settingsPanel.open) {
+    return;
+  }
+
+  applyDriveStopState(true);
+
+  if (
+    driveChannel &&
+    driveChannel.readyState === "open"
+  ) {
+    sendStopCommand();
+    sendDriveStopState(true);
+  }
+
+  driveStatusElement.textContent =
+    "詳細設定を開いたため，操縦を停止しています。\n" +
+    "再開するには詳細設定を閉じて，STOP解除を押してください。";
+}
+
+    settingsPanel.addEventListener("toggle", () => {
+  if (settingsPanel.open) {
+    stopDrivingForSettings();
+  }
+});
 
     function sendDriveStopState(stopped) {
   if (
@@ -1245,12 +1561,16 @@ function applyDriveStopState(stopped) {
 
    videoWrapper.addEventListener("pointermove", event => {
   if (
-  role !== "viewer" ||
-  !joystickActive ||
-  driveStopped
-) {
-  return;
-}
+    role !== "viewer" ||
+    !joystickActive ||
+    driveStopped ||
+    settingsPanel.open ||
+    stopEditorActive
+  ) {
+    return;
+  }
+
+  // 以下ジョイスティック移動処理
 
   const rect = videoWrapper.getBoundingClientRect();
 
