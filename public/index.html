@@ -175,6 +175,11 @@
     <section class="panel">
       <p id="status">どちらかのボタンを押してください。</p>
 
+      <p id="driveStatus">
+        操縦命令：未受信
+      </p>
+
+
       <video
         id="video"
         autoplay
@@ -193,6 +198,7 @@
     const viewButton = document.getElementById("viewButton");
     const stopButton = document.getElementById("stopButton");
     const statusElement = document.getElementById("status");
+    const driveStatusElement = document.getElementById("driveStatus");
     const videoElement = document.getElementById("video");
 
     let role = null;
@@ -283,12 +289,11 @@
     console.log("受信した命令", command);
 
     if (command.type === "drive") {
-      setStatus(
-        "操縦命令を受信しました。\n" +
-        "X：" + command.x + "\n" +
-        "Y：" + command.y + "\n" +
-        "sequence：" + command.sequence
-      );
+      driveStatusElement.textContent =
+  "操縦命令を受信しました。\n" +
+  "X：" + command.x + "\n" +
+  "Y：" + command.y + "\n" +
+  "sequence：" + command.sequence;
     }
 
   } catch (error) {
@@ -380,7 +385,7 @@ peerConnection.ontrack = event => {
 
       peerConnection.onconnectionstatechange = () => {
 
-        console.log("Ver 5");
+        console.log("Ver 6");
         
         const state = peerConnection.connectionState;
 
