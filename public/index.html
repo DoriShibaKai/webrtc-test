@@ -254,6 +254,16 @@
     const joystickArea = document.getElementById("joystickArea");
     const joystickKnob = document.getElementById("joystickKnob");
 
+    const xyDisplay = document.getElementById("xyDisplay");
+
+    let joystickCenterX = 0;
+    let joystickCenterY = 0;
+    let joystickActive = false;
+
+    const joystickRadius = 70;
+    const knobRadius = 25;
+    const maxKnobDistance = joystickRadius - knobRadius;
+
     let role = null;
     let socket = null;
     let peerConnection = null;
@@ -790,15 +800,53 @@ if (driveChannel) {
     }
 
     videoWrapper.addEventListener("pointerdown", event => {
-    const rect = videoWrapper.getBoundingClientRect();
+  const rect = videoWrapper.getBoundingClientRect();
 
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+  joystickCenterX = event.clientX - rect.left;
+  joystickCenterY = event.clientY - rect.top;
 
-    joystickArea.style.left = x + "px";
-    joystickArea.style.top = y + "px";
-    joystickArea.style.display = "block";
-    });
+  joystickArea.style.left = joystickCenterX + "px";
+  joystickArea.style.top = joystickCenterY + "px";
+  joystickArea.style.display = "block";
+
+  joystickKnob.style.left = "50%";
+  joystickKnob.style.top = "50%";
+  joystickKnob.style.transform = "translate(-50%, -50%)";
+
+  joystickActive = true;
+
+  xyDisplay.textContent = "X：0.00　Y：0.00";
+});
+
+    videoWrapper.addEventListener("pointermove", event => {
+  if (!joystickActive) {
+    return;
+  }
+
+  const rect = videoWrapper.getBoundingClientRect();
+
+  const pointerX = event.clientX - rect.left;
+  const pointerY = event.clientY - rect.top;
+
+  let dx = pointerX - joystickCenterX;
+  let dy = pointerY - joystickCenterY;
+
+  const distance = Math.sqrt(dx * dx + dy * dy);
+
+  if (distance > maxKnobDistance) {
+    dx = dx / distance * maxKnobDistance;
+    dy = dy / distance * maxKnobDistance;
+  }
+
+  joystickKnob.style.left = (joystickRadius + dx) + "px";
+  joystickKnob.style.top = (joystickRadius + dy) + "px";
+
+  const x = dx / maxKnobDistance;
+  const y = -dy / maxKnobDistance;
+
+  xyDisplay.textContent =
+    "X：" + x.toFixed(2) + "　Y：" + y.toFixed(2);
+});
 
     
     sendButton.addEventListener("click", startSender);
