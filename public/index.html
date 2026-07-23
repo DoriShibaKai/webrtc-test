@@ -911,29 +911,11 @@ if (driveChannel) {
   }
 });
 
-videoWrapper.addEventListener("pointerup", event => {
-  if (role !== "viewer") {
-    return;
-  }
 
-  sendStopCommand();
-});
 
-videoWrapper.addEventListener("pointercancel", event => {
-  if (role !== "viewer") {
-    return;
-  }
 
-  sendStopCommand();
-});
 
-window.addEventListener("pointerup", event => {
-  if (role !== "viewer" || !joystickActive) {
-    return;
-  }
 
-  sendStopCommand();
-});
 
 
     
