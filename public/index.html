@@ -839,10 +839,55 @@ if (driveChannel) {
   xyDisplay.textContent = "X：0.00　Y：0.00";
 });
 
+
+    function sendStopCommand() {
+  if (driveChannel && driveChannel.readyState === "open") {
+    driveSequence++;
+
+    const stopData = {
+      type: "drive",
+      x: 0,
+      y: 0,
+      sequence: driveSequence
+    };
+
+    driveChannel.send(JSON.stringify(stopData));
+  }
+
+  xyDisplay.textContent = "X：0.00　Y：0.00";
+
+  joystickKnob.style.left = "50%";
+  joystickKnob.style.top = "50%";
+}
+
    videoWrapper.addEventListener("pointermove", event => {
   if (role !== "viewer" || !joystickActive) {
     return;
   }
+
+     videoWrapper.addEventListener("pointerup", event => {
+  if (role !== "viewer") {
+    return;
+  }
+
+  sendStopCommand();
+});
+
+     videoWrapper.addEventListener("pointercancel", event => {
+  if (role !== "viewer") {
+    return;
+  }
+
+  sendStopCommand();
+});
+
+     window.addEventListener("pointerup", event => {
+  if (role !== "viewer" || !joystickActive) {
+    return;
+  }
+
+  sendStopCommand();
+});
 
   const rect = videoWrapper.getBoundingClientRect();
 
