@@ -243,12 +243,15 @@
     }
 
     function createPeerConnection() {
+
+      console.log("createPeerConnection開始");
       peerConnection = new RTCPeerConnection(rtcConfiguration);
 
       if (role === "viewer") {
 
   driveChannel =
     peerConnection.createDataChannel("drive");
+        
 
   console.log("作成直後", driveChannel.readyState);
 
