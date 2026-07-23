@@ -204,6 +204,10 @@
         </button>
       </div>
 
+      <button id="driveStopButton" type="button" disabled>
+        STOP
+      </button>
+      
       <button id="stopButton" type="button" disabled>
         接続を終了
       </button>
@@ -247,6 +251,7 @@
     const roomInput = document.getElementById("roomName");
     const sendButton = document.getElementById("sendButton");
     const viewButton = document.getElementById("viewButton");
+    const driveStopButton = document.getElementById("driveStopButton");
     const stopButton = document.getElementById("stopButton");
     const statusElement = document.getElementById("status");
     const driveStatusElement = document.getElementById("driveStatus");
@@ -293,6 +298,7 @@
       sendButton.disabled = true;
       viewButton.disabled = true;
       roomInput.disabled = true;
+      driveStopButton.disabled = false;
       stopButton.disabled = false;
     }
 
@@ -300,6 +306,7 @@
       sendButton.disabled = false;
       viewButton.disabled = false;
       roomInput.disabled = false;
+      driveStopButton.disabled = true;
       stopButton.disabled = true;
     }
 
@@ -915,16 +922,16 @@ if (driveChannel) {
 });
 
 
+sendButton.addEventListener("click", startSender);
+viewButton.addEventListener("click", startViewer);
 
+driveStopButton.addEventListener("click", () => {
+  sendStopCommand();
 
+  joystickActive = true;
+});
 
-
-
-
-    
-    sendButton.addEventListener("click", startSender);
-    viewButton.addEventListener("click", startViewer);
-    stopButton.addEventListener("click", () => stopAll(true));
+stopButton.addEventListener("click", () => stopAll(true));
 
     window.addEventListener("beforeunload", () => {
       stopAll(false);
