@@ -350,12 +350,15 @@
       };
 
       peerConnection.onconnectionstatechange = () => {
+
+        console.log("Ver 1");
+        
         const state = peerConnection.connectionState;
 
         if (state === "connected") {
 
           console.log("★★★ connected ★★★");
-         console.log(driveChannel);
+          console.log("状態=", driveChannel?.readyState);
 
 if (driveChannel) {
     console.log("状態", driveChannel.readyState);
