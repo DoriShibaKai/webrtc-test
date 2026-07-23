@@ -251,7 +251,14 @@
 
   driveChannel =
     peerConnection.createDataChannel("drive");
-        
+
+  driveChannel.onclosing = () => {
+  console.log("PC側 DataChannel closing");
+};
+
+driveChannel.onerror = error => {
+  console.error("PC側 DataChannel error", error);
+};
 
   console.log("作成直後", driveChannel.readyState);
 
@@ -346,7 +353,7 @@ peerConnection.ontrack = event => {
 
       peerConnection.onconnectionstatechange = () => {
 
-        console.log("Ver 1");
+        console.log("Ver 3");
         
         const state = peerConnection.connectionState;
 
