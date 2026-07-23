@@ -273,6 +273,24 @@
         });
       };
 
+      peerConnection.ondatachannel = event => {
+
+  driveChannel = event.channel;
+
+  driveChannel.onopen = () => {
+    console.log("Drive DataChannel 接続");
+  };
+
+  driveChannel.onclose = () => {
+    console.log("Drive DataChannel 切断");
+  };
+
+  driveChannel.onmessage = event => {
+    console.log("受信", event.data);
+  };
+
+};
+      
       peerConnection.ontrack = event => {
         if (role !== "viewer") {
           return;
