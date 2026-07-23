@@ -184,6 +184,41 @@
 
     background: rgba(255,255,255,0.8);
 }
+
+    #settingsPanel {
+  margin-top: 14px;
+}
+
+#settingsPanel summary {
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 17px;
+}
+
+.settingsGroup {
+  margin-top: 12px;
+  padding: 14px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #fafafa;
+}
+
+.settingsGroup h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.settingsGroup select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.settingsGroup hr {
+  margin: 18px 0;
+}
+    
   </style>
 </head>
 
@@ -224,6 +259,61 @@
         iPhoneとパソコンで同じ部屋名を使ってください。
         最初は「home-camera」のままで構いません。
       </p>
+
+      <details id="settingsPanel">
+  <summary>詳細設定</summary>
+
+  <div class="settingsGroup">
+
+    <h3>STOPボタン</h3>
+
+    <label>
+      <input
+        type="checkbox"
+        id="editStopButton"
+      >
+      配置・サイズを変更する
+    </label>
+
+    <hr>
+
+    <h3>PC STOPキー</h3>
+
+    <select id="pcStopKey">
+      <option value="Space" selected>Space</option>
+      <option value="Escape">Escape</option>
+      <option value="Enter">Enter</option>
+      <option value="KeyS">S</option>
+      <option value="None">使用しない</option>
+    </select>
+
+    <hr>
+
+    <h3>iPhone STOPジェスチャー</h3>
+
+    <select id="iphoneStopGesture">
+      <option value="threeRight" selected>
+        3本指右スワイプ
+      </option>
+
+      <option value="threeLeft">
+        3本指左スワイプ
+      </option>
+
+      <option value="threeBoth">
+        3本指左右どちらでも
+      </option>
+
+      <option value="none">
+        使用しない
+      </option>
+
+    </select>
+
+  </div>
+
+</details>
+      
     </section>
 
     <section class="panel">
@@ -269,6 +359,18 @@
     const joystickKnob = document.getElementById("joystickKnob");
 
     const xyDisplay = document.getElementById("xyDisplay");
+
+    const settingsPanel =
+  document.getElementById("settingsPanel");
+
+const editStopButton =
+  document.getElementById("editStopButton");
+
+const pcStopKey =
+  document.getElementById("pcStopKey");
+
+const iphoneStopGesture =
+  document.getElementById("iphoneStopGesture");
 
     let joystickCenterX = 0;
     let joystickCenterY = 0;
@@ -1062,6 +1164,85 @@ stopButton.addEventListener("click", () => stopAll(true));
     window.addEventListener("beforeunload", () => {
       stopAll(false);
     });
+
+    // ======================================
+// 詳細設定の保存
+// ======================================
+
+function loadSettings() {
+
+  const savedPcKey =
+    localStorage.getItem("pcStopKey");
+
+  if (savedPcKey !== null) {
+    pcStopKey.value = savedPcKey;
+  }
+
+  const savedGesture =
+    localStorage.getItem(
+      "iphoneStopGesture"
+    );
+
+  if (savedGesture !== null) {
+    iphoneStopGesture.value =
+      savedGesture;
+  }
+
+  const savedEditMode =
+    localStorage.getItem(
+      "editStopButton"
+    );
+
+  editStopButton.checked =
+    savedEditMode === "true";
+}
+
+
+function saveSettings() {
+
+  localStorage.setItem(
+    "pcStopKey",
+    pcStopKey.value
+  );
+
+  localStorage.setItem(
+    "iphoneStopGesture",
+    iphoneStopGesture.value
+  );
+
+  localStorage.setItem(
+    "editStopButton",
+    editStopButton.checked
+  );
+}
+
+
+// ----------
+// 変更されたら保存
+// ----------
+
+pcStopKey.addEventListener(
+  "change",
+  saveSettings
+);
+
+iphoneStopGesture.addEventListener(
+  "change",
+  saveSettings
+);
+
+editStopButton.addEventListener(
+  "change",
+  saveSettings
+);
+
+
+// ----------
+// 起動時に読み込み
+// ----------
+
+loadSettings();
+    
   </script>
 </body>
 </html>
