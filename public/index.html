@@ -1626,6 +1626,10 @@ function toggleDriveStop(event) {
   event.preventDefault();
   event.stopPropagation();
 
+  if (stopEditorActive) {
+    return;
+  }
+
   const newStoppedState = !driveStopped;
 
   if (newStoppedState) {
