@@ -809,6 +809,8 @@ const iphoneStopGesture =
     let driveSequence = 0;
 
     let stopEditorActive = false;
+let remoteSettingsActive = false;
+
 let stopEditAction = null;
 
 let stopEditStartX = 0;
@@ -1468,11 +1470,30 @@ function applyDriveStopState(stopped) {
   }
 }
 
+    function updateDriveStopButtonAvailability() {
+
+  const channelConnected =
+    driveChannel &&
+    driveChannel.readyState === "open";
+
+  const settingsActive =
+    settingsPanel.open ||
+    remoteSettingsActive;
+
+  driveStopButton.disabled =
+    !channelConnected ||
+    settingsActive ||
+    stopEditorActive;
+}
+
 function stopDrivingForSettings() {
 
   if (!settingsPanel.open) {
     return;
   }
+
+  // 詳細設定中はSTOP解除ボタンを使用不可にする
+  updateDriveStopButtonAvailability();
 
   // 自分側を停止状態にする
   applyDriveStopState(true);
@@ -1493,20 +1514,26 @@ function stopDrivingForSettings() {
     "操縦は一時停止しています。";
 }
 
-    settingsPanel.addEventListener("toggle", () => {
+   settingsPanel.addEventListener("toggle", () => {
 
   if (settingsPanel.open) {
 
     stopDrivingForSettings();
 
-  } else if (driveStopped) {
+  } else {
 
-    // 詳細設定を閉じたことを相手へ送る
-    sendSettingsState(false);
+    // 自分側の詳細設定を閉じたため，
+    // 相手側も詳細設定中でなければボタンを戻す
+    updateDriveStopButtonAvailability();
 
-    driveStatusElement.textContent =
-      "詳細設定を終了しました。\n" +
-      "「解除」を押すと操縦を再開できます。";
+    if (driveStopped) {
+
+      sendSettingsState(false);
+
+      driveStatusElement.textContent =
+        "詳細設定を終了しました。\n" +
+        "「解除」を押すと操縦を再開できます。";
+    }
   }
 
 });
@@ -1563,9 +1590,15 @@ function sendSettingsState(active) {
    // 詳細設定の開閉状態を受信した場合
 if (command.type === "settings-state") {
 
-  if (command.active === true) {
+  remoteSettingsActive =
+    command.active === true;
 
-    // 相手が詳細設定を開いた
+  // 相手が詳細設定中なら，
+  // 自分側の解除ボタンも使用不可にする
+  updateDriveStopButtonAvailability();
+
+  if (remoteSettingsActive) {
+
     applyDriveStopState(true);
 
     driveStatusElement.textContent =
@@ -1574,7 +1607,6 @@ if (command.type === "settings-state") {
 
   } else {
 
-    // 相手が詳細設定を閉じた
     driveStatusElement.textContent =
       "詳細設定を終了しました。\n" +
       "「解除」を押すと操縦を再開できます。";
@@ -1694,13 +1726,23 @@ function toggleDriveStop(event) {
   event.preventDefault();
   event.stopPropagation();
 
+  // STOPボタン編集中は操作しない
   if (stopEditorActive) {
+    return;
+  }
+
+  // 自分または相手が詳細設定中なら解除しない
+  if (
+    settingsPanel.open ||
+    remoteSettingsActive
+  ) {
     return;
   }
 
   const newStoppedState = !driveStopped;
 
   if (newStoppedState) {
+
     // 押した端末を直ちに非常停止にする
     applyDriveStopState(true);
 
@@ -1711,6 +1753,7 @@ function toggleDriveStop(event) {
     sendDriveStopState(true);
 
   } else {
+
     // 押した端末の非常停止を解除する
     applyDriveStopState(false);
 
