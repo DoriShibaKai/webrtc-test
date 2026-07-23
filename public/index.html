@@ -794,6 +794,14 @@ if (driveChannel) {
       videoElement.classList.add("hidden");
       videoElement.muted = true;
 
+      joystickActive = false;
+      joystickArea.style.display = "none";
+
+      joystickKnob.style.left = "50%";
+      joystickKnob.style.top = "50%";
+
+      xyDisplay.textContent = "X：0.00　Y：0.00";
+
       setControlsDisconnected();
 
       if (showMessage) {
