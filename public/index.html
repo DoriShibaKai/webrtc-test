@@ -1448,22 +1448,28 @@ function applyDriveStopState(stopped) {
     joystickKnob.style.left = "50%";
     joystickKnob.style.top = "50%";
 
-    driveStopButtonText.textContent = "STOP解除";
+    driveStopButtonText.textContent = "解除";
 
-    driveStatusElement.textContent =
-      "非常停止中です。\n" +
-      "再開するには「STOP解除」を押してください。";
+    if (!settingsPanel.open) {
+      driveStatusElement.textContent =
+        "非常停止中です。\n" +
+        "再開するには「解除」を押してください。";
+    }
 
   } else {
+
     driveStopButtonText.textContent = "STOP";
 
-    driveStatusElement.textContent =
-      "非常停止を解除しました。\n" +
-      "映像上をクリックして操作を再開してください。";
+    if (!settingsPanel.open) {
+      driveStatusElement.textContent =
+        "非常停止を解除しました。\n" +
+        "映像上をクリックして操作を再開してください。";
+    }
   }
 }
 
-    function stopDrivingForSettings() {
+function stopDrivingForSettings() {
+
   if (!settingsPanel.open) {
     return;
   }
@@ -1479,14 +1485,23 @@ function applyDriveStopState(stopped) {
   }
 
   driveStatusElement.textContent =
-    "詳細設定を開いたため，操縦を停止しています。\n" +
-    "再開するには詳細設定を閉じて，STOP解除を押してください。";
+    "詳細設定中です。\n" +
+    "操縦は一時停止しています。";
 }
 
     settingsPanel.addEventListener("toggle", () => {
+
   if (settingsPanel.open) {
+
     stopDrivingForSettings();
+
+  } else if (driveStopped) {
+
+    driveStatusElement.textContent =
+      "詳細設定を終了しました。\n" +
+      "「解除」を押すと操縦を再開できます。";
   }
+
 });
 
     function sendDriveStopState(stopped) {
