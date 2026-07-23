@@ -312,11 +312,19 @@
 }
 
 .settingsSectionTitle {
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #e5e5e5;
+
+  margin: -14px -14px 12px;
+  padding: 10px 14px;
+
+  border-bottom: 1px solid #b9d7ff;
+
+  background: #dcebff;
+  color: #174a9c;
+
   font-size: 18px;
   font-weight: bold;
+
+  border-radius: 10px 10px 0 0;
 }
 
 .settingsToggleRow {
@@ -405,11 +413,11 @@
   min-height: 52px;
   padding: 12px;
 
-  border: 1px solid #1769e0;
+  border: 1px solid #8b8b8b;
   border-radius: 8px;
 
-  background: #1769e0;
-  color: #ffffff;
+  background: #ffffff;
+  color: #222222;
 
   font-size: 17px;
   font-weight: bold;
@@ -417,6 +425,14 @@
   transition:
     background-color 0.2s,
     transform 0.15s;
+}
+
+.settingsActionButton:hover {
+  background: #f4f7fb;
+}
+
+.settingsActionButton:active {
+  transform: scale(0.98);
 }
 
 .settingsActionButton:hover {
