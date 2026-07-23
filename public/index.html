@@ -135,6 +135,11 @@
       }
     }
 
+
+    #videoWrapper {
+  position: relative;
+    }
+    
     #joystickArea {
     position: absolute;
     right: 20px;
@@ -148,7 +153,8 @@
     background: rgba(255,255,255,0.15);
     border: 2px solid rgba(255,255,255,0.4);
 
-    
+    z-index: 10;
+    display: block;    
 }
 
 #joystickKnob {
@@ -212,21 +218,23 @@
         操縦命令：未受信
       </p>
 
-      <div id="joystickArea">
-  <div id="joystickKnob"></div>
-</div>
-
-<p id="xyDisplay">
+      <p id="xyDisplay">
   X：0.00　Y：0.00
 </p>
 
-      <video
-        id="video"
-        autoplay
-        playsinline
-        muted
-        class="hidden"
-      ></video>
+<div id="videoWrapper">
+  <video
+    id="video"
+    autoplay
+    playsinline
+    muted
+    class="hidden"
+  ></video>
+
+  <div id="joystickArea">
+    <div id="joystickKnob"></div>
+  </div>
+</div>
     </section>
   </main>
 
