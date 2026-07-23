@@ -1680,14 +1680,6 @@ function loadSettings() {
     iphoneStopGesture.value =
       savedGesture;
   }
-
-  const savedEditMode =
-    localStorage.getItem(
-      "editStopButton"
-    );
-
-  editStopButton.checked =
-    savedEditMode === "true";
 }
 
 
@@ -1701,11 +1693,6 @@ function saveSettings() {
   localStorage.setItem(
     "iphoneStopGesture",
     iphoneStopGesture.value
-  );
-
-  localStorage.setItem(
-    "editStopButton",
-    editStopButton.checked
   );
 }
 
@@ -1724,10 +1711,7 @@ iphoneStopGesture.addEventListener(
   saveSettings
 );
 
-editStopButton.addEventListener(
-  "change",
-  saveSettings
-);
+
 
 
 // ----------
