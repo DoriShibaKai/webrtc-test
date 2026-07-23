@@ -1,800 +1,598 @@
+現在こういう画面まで出来ています。ファイルはこういう感じ。中身が見たかったら度のファイルの中身がいるかを言ってください。
+index(3).html
+ファイル
+index.js
+JavaScript
+まずは家のマウスで命令を出せるかをやりたい。まだサーボモーターが届いてないから指令だけ作っておいて、サーボモーターつないだらすぐに動かせるところまでやっておきたい
+今こうですよ？
+送信ボタンがない。これはgithubでコミットするだけではダメなの？
+Github上で書き換えただけです
+index (1).html
+ファイル
+間違えました。こっちでした。さっきのindexはややこしいから削除していいですか？
+2枚目は★★★の方に入れ替えた後です。
+JSON.parse(event.data);　とは？説明ののち私が次にする指示も必ず送って。
+添付します。
+後、===　これ何？
+＝３つつながった記号。　いつも通り指示も必ず
+さっきコミットし忘れてました。こっちが最新です。
+
+      peerConnection.onconnectionstatechange = () => {
+        const state = peerConnection.connectionState;
+
+        if (state === "connected") {
+
+          console.log("★★★ connected ★★★");
+         console.log(driveChannel);
+
+if (driveChannel) {
+    console.log("状態", driveChannel.readyState);
+}
+          
+          setStatus(
+            role === "sender"
+              ? "接続成功：iPhoneの映像を送信しています。"
+              : "接続成功：iPhoneの映像を受信しています。"
+          );
+        } else if (state === "disconnected") {
+          setStatus("通信が一時的に切断されました。");
+        } else if (state === "failed") {
+          setStatus(
+            "WebRTC接続に失敗しました。\n" +
+            "いったん接続を終了し、両方でやり直してください。"
+          );
+        } else if (state === "closed") {
+          setStatus("接続を終了しました。");
+        }
+      };
+
+
+さっきから気になるのが、あることをやってすぐには結果が思うように出ず、次のことをやったらそのことは出ないが、その前にやったことの結果がちゃんと帰ってきている。。つまり1個前にやったことの結果が次のターンで返ってくることを繰り返している気がする。すぐのコミットでは結果でないのに。タイムラグがある？
+Ver1ってどこか書いてる？
+どれがVer1を追加したコミットなのか分からん。でもVer1が出た。やはり待たないとダメなだけでは？
+出ます
+そもそも接続は終わらせてたから接続を終了は押せないんですけどね。。。
+こうなった
+index (2).html
+ファイル
+ファイル全部貼ります
+複製の方法は？
+iPhoneの画面には何も出ない
+でた！
+ジョイスティック領域って？
+映像の下にジョイスティックを置くより、映像の上に半透明で重ねる方でやりますが、今、ジョイスティック領域は表示されてる？
+無いですね
+index (3).html
+ファイル
+無いよ？コード全部送るから見直して
+右下に出た
+円の外に出ないのですが、左や上は結構ギリギリまではみ出るのに、右下は2枚目の添付のようにほぼ中央から下には行ってくれない。
+できた！
+デプロイ待ちの間に。PC側にずっと操縦命令未受信と出ているのはなぜ？
+操縦命令：未受信　は、いらないってことですね。
+iPhone側は更新されません。ずっと最初のまま。
+index(4).html
+ファイル
+全コードです
+動かすのが速すぎるとわずかに数値に差はありますが反映しました。ただ、iPhone側のジョイスティック領域はずっと左上です
+index (1)(1).html
+ファイル
+どこか間違えている気がする
+index (2)(1).html
+ファイル
+今これ
+index (3)(1).html
+ファイル
+多分それはさっき削除した。でもマウスボタンを押し続けないとカーソルが０に戻ってしまう。全コード添付したからコード確認して。
+貼り付けられたテキスト（1 点）(26).txt
+ドキュメント
+再度添付します。見直して
+突然ちゃんとできました。コミットがうまく行ってなかったのかもしれません。次は停止ボタン？
+貼り付けられたテキスト（1 点）(27).txt
+ドキュメント
+①映像上を改めてクリックしてから操作を再開？
+映像の中のどこかを押したら再開するってこと？ストップボタンを再度押したらじゃなく？
+
+②全コードチェックして。添付しました
+
+貼り付けられたテキスト（1 点）(28).txt
+ドキュメント
+全体チェックして。ところであなたにスルーされましたが、さっきうまくいったのはiPhone側が送り手のときです。パソコン側が送り手の時は、iPhone側に出たストップボタンは反応せずだったことも今回は解決してるのですか？
+貼り付けられたテキスト（1 点）(29).txt
+ドキュメント
+コードをチェックして。間違いはない？コミットしますよ？
+うまく行きました。ストップボタンが大きくなったのも、いいですが、このボタンとボタンの間は誤操作しそうだから、①大きさとか位置を自由に変えられるようにしてほしい。②PCの指定のキーとiPhoneの右にスワイプ、またはスクロールなどでも止まるようにしたい。可能かどうかを先に教えて
+今の画面。変なとこにチェックボックスありますね
+貼り付けられたテキスト（1 点）(30).txt
+ドキュメント
+もう少し字を大きくして。後、配置・サイズを変更するにチェックを入れる意味は？
+貼り付けられたテキスト（1 点）(31).txt
+ドキュメント
+　これでいい？
+貼り付けられたテキスト（1 点）(32).txt
+ドキュメント
+全体チェックして。
+貼り付けられたテキスト（1 点）(33).txt
+ドキュメント
+これでとりあえず何を確認したらいい？今からコミットして確認します
+「詳細設定」を開いた瞬間にSTOPになる。ときに、　非常停止中です　、非常停止を解除しました。　ではなく、詳細設定中です、　詳細設定を終了しました　に変えれないですか？ビックリするので・・。後、スマホだと　ストップ解除の字がはみ出る・・
+貼り付けられたテキスト（1 点）(34).txt
+ドキュメント
+どう？
+貼り付けられたテキスト（1 点）(35).txt
+ドキュメント
+直した
+貼り付けられたテキスト（1 点）(36).txt
+ドキュメント
+直した
+できたけど、詳細設定を開いたとき、次にどこを押したら良いか色付きにしてほしい。白地に黒だから詳細設定を閉じるのがどこか非常に分かりにくい。
+詳細設定という青地はいいけど、ストップボタンを編集するが、同じ色はダメ。
+見出しのSTOPボタン、パソコン、iPhone　だけ薄めの青い地にして、ボタンは白でいいです。
+
+これがうまく行ったら、いったんやめるので、私が過去に追加したいと言っていたのが何だったか一覧で書き出しておいてください。
+今日 19:48
+貼り付けられたテキスト（1 点）(37).txt
+ドキュメント
+今、見た目がこうです。
+
+index.html見てください。
+
+
+こういう格好のいい形にしたい。AIが出したから「その他の設定」というindexには無いボタンを勝手に作ってますが、この画像の通りにするという意味ではなく、スタイリッシュさやイメージをこれに合わせて、今あるindexの見た目を変えたい
+
+質問はありません。意図は理解できました。
+
+変更内容は次のとおりです。
+
+上部ボタン名を変更
+「カメラを送る」
+「映像を受け取る」
+「接続を終了」
+3つのボタンは横並びのカード風にするが，参考画像ほど縦に大きくしない
+アイコンを付ける場合も，文字の上ではなくタイトル横に小さく配置する
+詳細設定を開いている間は，通常の映像画面を非表示にする
+詳細設定を閉じると，映像画面を大きく表示する
+詳細設定内の見出しを変更
+「STOPボタン」→「STOPボタン」
+「パソコン」→「映像受信側」
+「iPhone」→「カメラ送信側」
+現在存在しない「その他の設定」は追加しない
+
+STOPボタン編集画面は，編集を開始した時点のカメラ映像を静止画として固定し，通常の映像画面と同じ大きさ・比率・背景の上でSTOPボタンを移動・拡大縮小できる形にします。
+
+この方式なら，
+
+接続中に「STOPボタンを編集する」を押す
+その瞬間の映像を静止画として取得する
+静止画上でSTOPボタンを配置する
+編集中に実際の動画が動かない
+完了後は通常のライブ映像へ戻る
+
+という動作にできます。
+
+カメラ接続前に編集を開いた場合だけは静止画を取得できないため，黒または濃い背景の映像枠を表示します。現在の編集画面は実際の videoWrapper 自体を編集画面へ移動する構造なので，ここを静止画方式に変更します。
+
+次は，今の機能を残したまま，この方針を反映した index.html の完全版を作成します。
+
+それで大丈夫です。ください
+目的
+
+現在のWebRTC・STOP同期・ジョイスティック機能を残したまま，画面全体を濃いネイビー系のスタイリッシュなデザインへ変更しました。
+
+主な変更点は次のとおりです。
+
+ボタン名を変更
+「カメラを送る」
+「映像を受け取る」
+「接続を終了」
+上部ボタンを，縦に大きすぎないコンパクトなカード型へ変更
+詳細設定内を
+STOPボタン
+映像受信側
+カメラ送信側
+に変更
+詳細設定を開くと通常の映像画面を非表示
+STOPボタン編集時は，その瞬間の映像を静止画として表示
+静止画上でSTOPボタンの移動・拡大縮小が可能
+STOPボタンの位置と大きさを端末内へ保存
+接続状態を右上に表示
+映像受信側のSTOPキー操作も追加
+どこを置き換えるか
+
+現在の index.html 全体を，こちらのファイルに置き換えてください。
+
+コード全体
+
+index_stylish.html
+
+変更後の動作
+
+通常画面では，詳細設定の下に映像が大きく表示されます。
+
+詳細設定を開くと，
+
+映像画面が消える
+STOPボタン設定
+映像受信側設定
+カメラ送信側設定
+
+だけが表示されます。
+
+「STOPボタンを編集する」を押すと，
+
+現在のカメラ映像を静止画として取得
+静止画上にSTOPボタンを表示
+ボタン本体をドラッグして移動
+右下の「↘」をドラッグして大きさ変更
+右上の「✓」で保存
+
+となります。
+
+カメラ接続前に編集した場合は，映像の代わりに黒い映像枠が表示されます。
+
+次にやること
+
+元の index.html を念のため別名で保存してから，ダウンロードしたファイルを index.html に名前変更して動作確認してください。
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>WebRTCカメラ</title>
-
-  
   <style>
-    * {
-      box-sizing: border-box;
+    :root {
+      color-scheme: dark;
+      --bg: #07111f;
+      --surface: rgba(14, 29, 51, 0.92);
+      --surface-2: rgba(20, 39, 66, 0.92);
+      --surface-3: rgba(26, 47, 77, 0.92);
+      --border: rgba(143, 176, 224, 0.18);
+      --text: #f6f9ff;
+      --muted: #a9b8cf;
+      --blue: #4f6df5;
+      --green: #2c9b78;
+      --red: #e83e52;
+      --shadow: 0 18px 60px rgba(0, 0, 0, 0.34);
     }
+
+    * { box-sizing: border-box; }
+
+    html { background: var(--bg); }
 
     body {
       margin: 0;
-      padding: 20px;
-      background: #f3f4f6;
-      color: #222;
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+      min-height: 100vh;
+      padding: 22px;
+      background:
+        radial-gradient(circle at 15% 0%, rgba(55, 91, 181, 0.22), transparent 34%),
+        radial-gradient(circle at 90% 10%, rgba(25, 122, 116, 0.14), transparent 28%),
+        linear-gradient(145deg, #07101e 0%, #091528 52%, #06101d 100%);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    .container {
-      width: min(900px, 100%);
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { cursor: default; opacity: 0.48; }
+    .hidden { display: none !important; }
+
+    .appShell {
+      width: min(980px, 100%);
       margin: 0 auto;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: rgba(5, 16, 31, 0.9);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
     }
 
-    h1 {
-      margin-top: 0;
-      font-size: 26px;
+    .appHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 22px 24px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(15, 31, 57, 0.98), rgba(9, 22, 42, 0.96));
     }
 
-    .panel {
-      margin-bottom: 16px;
-      padding: 16px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    .brand { display: flex; align-items: center; gap: 13px; min-width: 0; }
+    .brandMark {
+      width: 44px; height: 44px; flex: 0 0 auto; border-radius: 50%;
+      background: radial-gradient(circle at 50% 50%, #050d17 0 20%, #30c2ff 22% 30%, #2847d9 33% 48%, #14264a 50% 66%, #081322 68%);
+      box-shadow: 0 0 24px rgba(55, 139, 255, 0.36), inset 0 0 10px rgba(255,255,255,.28);
     }
+    .brandText { min-width: 0; }
+    .brandTitle { margin: 0; font-size: clamp(21px, 3vw, 28px); line-height: 1.15; letter-spacing: .01em; }
+    .brandSubtitle { margin: 5px 0 0; color: var(--muted); font-size: 13px; }
 
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: bold;
+    .connectionBadge {
+      display: flex; align-items: center; gap: 8px; flex: 0 0 auto;
+      padding: 9px 12px; border: 1px solid var(--border); border-radius: 999px;
+      color: #dce8fb; background: rgba(4, 14, 27, .52); font-size: 13px; font-weight: 700;
     }
+    .connectionDot { width: 8px; height: 8px; border-radius: 50%; background: #7c8ca5; box-shadow: 0 0 0 4px rgba(124,140,165,.1); }
+    .connectionDot.connected { background: #57d37c; box-shadow: 0 0 0 4px rgba(87,211,124,.12), 0 0 14px rgba(87,211,124,.52); }
 
-    input {
-      width: 100%;
+    .content { padding: 18px; }
+
+    .roomRow {
+      display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: end;
       margin-bottom: 14px;
-      padding: 12px;
-      border: 1px solid #aaa;
-      border-radius: 8px;
-      font-size: 17px;
+    }
+    .roomField label { display: block; margin: 0 0 7px 2px; color: var(--muted); font-size: 13px; font-weight: 700; }
+    #roomName {
+      width: 100%; min-height: 46px; margin: 0; padding: 10px 13px;
+      color: var(--text); background: rgba(5, 15, 29, .72); border: 1px solid var(--border); border-radius: 11px; outline: none;
+    }
+    #roomName:focus { border-color: rgba(91, 126, 255, .78); box-shadow: 0 0 0 3px rgba(79,109,245,.15); }
+
+    .actionGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 11px; margin-bottom: 14px; }
+    .actionButton {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      min-height: 62px; padding: 11px 14px; border: 1px solid rgba(255,255,255,.12); border-radius: 14px;
+      color: white; font-weight: 800; letter-spacing: .01em; box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 8px 22px rgba(0,0,0,.18);
+      transition: transform .16s, filter .16s, border-color .16s;
+    }
+    .actionButton:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.06); border-color: rgba(255,255,255,.22); }
+    .actionButton:active:not(:disabled) { transform: translateY(0) scale(.99); }
+    .actionIcon { font-size: 20px; line-height: 1; }
+    #sendButton { background: linear-gradient(135deg, #4f66ee, #283eb4); }
+    #viewButton { background: linear-gradient(135deg, #319d80, #176452); }
+    #stopButton { background: linear-gradient(135deg, #33445f, #1e2c43); }
+
+    #settingsPanel {
+      margin: 0 0 14px; overflow: hidden; border: 1px solid var(--border); border-radius: 14px;
+      background: linear-gradient(180deg, rgba(18,36,62,.92), rgba(12,27,48,.92));
+    }
+    #settingsPanel summary {
+      display: flex; align-items: center; min-height: 54px; padding: 0 16px;
+      color: var(--text); cursor: pointer; list-style: none; user-select: none; font-size: 16px; font-weight: 800;
+    }
+    #settingsPanel summary::-webkit-details-marker { display: none; }
+    #settingsPanel summary::before { content: "⚙"; margin-right: 10px; color: #9db7ff; font-size: 18px; }
+    #settingsPanel summary::after { content: "⌄"; margin-left: auto; color: #c1cee0; font-size: 19px; transition: transform .2s; }
+    #settingsPanel[open] summary::after { transform: rotate(180deg); }
+    #settingsPanel[open] summary { border-bottom: 1px solid var(--border); }
+
+    .settingsContent { display: grid; gap: 10px; padding: 11px; background: rgba(4,14,28,.34); }
+    .settingsSection {
+      margin: 0; padding: 14px; border: 1px solid var(--border); border-radius: 13px;
+      background: linear-gradient(135deg, rgba(23,43,71,.92), rgba(14,31,54,.95));
+    }
+    .settingsSectionTitle { margin: 0 0 11px; color: #edf4ff; font-size: 16px; font-weight: 850; }
+    .settingsDescription { color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .settingsActionDescription { margin: 8px 2px 0; }
+    .settingsActionButton {
+      width: 100%; min-height: 48px; padding: 10px 13px; border: 1px solid rgba(148,177,221,.3); border-radius: 10px;
+      color: var(--text); background: rgba(5,16,31,.48); font-weight: 800;
+    }
+    .settingsActionButton:hover { background: rgba(28,51,84,.8); }
+    .settingsField { display: grid; grid-template-columns: minmax(0,1fr) minmax(170px, 240px); gap: 14px; align-items: center; }
+    .settingsText { min-width: 0; }
+    .settingsLabel { display: block; margin-bottom: 4px; color: var(--text); font-size: 15px; font-weight: 800; }
+    .settingsField select {
+      width: 100%; min-height: 44px; margin: 0; padding: 8px 36px 8px 11px;
+      color: var(--text); background: #08172a; border: 1px solid rgba(148,177,221,.28); border-radius: 9px;
     }
 
-    .buttons {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
+    #livePanel {
+      overflow: hidden; border: 1px solid var(--border); border-radius: 16px;
+      background: #020812; box-shadow: 0 12px 38px rgba(0,0,0,.28);
     }
+    body.settings-open #livePanel { display: none; }
 
-    button {
-      min-height: 56px;
-      padding: 12px;
-      border: 0;
-      border-radius: 10px;
-      font-size: 17px;
-      font-weight: bold;
-      cursor: pointer;
+    .statusBar {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      min-height: 46px; padding: 10px 13px; border-bottom: 1px solid var(--border);
+      background: rgba(9,23,42,.94); color: #dce8f8; font-size: 13px;
     }
-
-    #sendButton {
-      background: #1769e0;
-      color: white;
-    }
-
-    #viewButton {
-      background: #15803d;
-      color: white;
-    }
-
-    #stopButton {
-      width: 100%;
-      margin-top: 12px;
-      background: #d1d5db;
-      color: #222;
-    }
-
-   #driveStopButton {
-  position: absolute;
-  left: 68%;
-  top: 4%;
-  width: 28%;
-  height: 15%;
-
-  min-width: 100px;
-  min-height: 52px;
-
-  margin: 0;
-  padding: 8px;
-
-  z-index: 30;
-
-  background: #dc2626;
-  color: #ffffff;
-
-  border: 3px solid #ffffff;
-  border-radius: 12px;
-
-  font-size: 20px;
-  font-weight: bold;
-
-  touch-action: none;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-#driveStopButtonText {
-  pointer-events: none;
-}
-
-#stopResizeHandle {
-  display: none;
-
-  position: absolute;
-  right: 2px;
-  bottom: 0;
-
-  width: 32px;
-  height: 32px;
-
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 8px 0 8px 0;
-
-  background: rgba(0, 0, 0, 0.45);
-  color: #ffffff;
-
-  font-size: 22px;
-  line-height: 1;
-
-  cursor: nwse-resize;
-  touch-action: none;
-}
-
-    button:disabled {
-      cursor: default;
-      opacity: 0.5;
-    }
-
-    #status {
-      min-height: 48px;
-      margin: 0;
-      padding: 12px;
-      background: #fff7d6;
-      border-radius: 8px;
-      white-space: pre-wrap;
-    }
-
-    video {
-      display: block;
-      width: 100%;
-      max-height: 70vh;
-      margin-top: 14px;
-      background: black;
-      border-radius: 10px;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .note {
-      margin-bottom: 0;
-      color: #555;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    @media (max-width: 600px) {
-      body {
-        padding: 12px;
-      }
-
-      .buttons {
-        grid-template-columns: 1fr;
-      }
-    }
-
+    #status { margin: 0; white-space: pre-wrap; }
+    #driveStatus, #xyDisplay { margin: 0; color: var(--muted); font-size: 12px; white-space: pre-wrap; }
+    .statusDetails { display: flex; gap: 14px; align-items: center; text-align: right; }
 
     #videoWrapper {
-  position: relative;
-  overflow: hidden;
+      position: relative; overflow: hidden; width: 100%; min-height: 280px; aspect-ratio: 16 / 9;
+      background: radial-gradient(circle at 50% 45%, #12243f, #02060c 72%); touch-action: none;
+    }
+    #videoWrapper::before {
+      content: "映像は接続後に表示されます"; position: absolute; inset: 0; display: grid; place-items: center;
+      color: #687b98; font-size: 14px; pointer-events: none;
+    }
+    #videoWrapper:has(video:not(.hidden))::before { display: none; }
+    video { display: block; width: 100%; height: 100%; max-height: none; margin: 0; object-fit: contain; background: #000; }
 
-  width: 100%;
-
-  background: #000000;
-  border-radius: 10px;
-
-  touch-action: none;
-}
-    
     #joystickArea {
-    position: absolute;
-    left: 0;
-    top: 0;
-    transform: translate(-50%, -50%);
-    display: none;
-
-    width: 140px;
-    height: 140px;
-
-    border-radius: 50%;
-
-    background: rgba(255,255,255,0.15);
-    border: 2px solid rgba(255,255,255,0.4);
-
-    z-index: 10;
-    
-}
-
-#joystickKnob {
-    position: absolute;
-
-    left: 50%;
-    top: 50%;
-
-    width: 50px;
-    height: 50px;
-
-    margin-left: -25px;
-    margin-top: -25px;
-
-    border-radius: 50%;
-
-    background: rgba(255,255,255,0.8);
-}
-
-    /* ======================================
-   詳細設定
-====================================== */
-
-#settingsPanel {
-  margin-top: 14px;
-  border: 1px solid #d6d6d6;
-  border-radius: 12px;
-  background: #ffffff;
-  overflow: hidden;
-}
-
-#settingsPanel summary {
-  display: flex;
-  align-items: center;
-  min-height: 48px;
-  padding: 0 16px;
-  cursor: pointer;
-  font-size: 18px;
-  font-weight: bold;
-  user-select: none;
-  list-style: none;
-}
-
-#settingsPanel summary::-webkit-details-marker {
-  display: none;
-}
-
-#settingsPanel summary::before {
-  content: "▶";
-  display: inline-block;
-  margin-right: 8px;
-  font-size: 12px;
-  transition: transform 0.2s;
-}
-
-#settingsPanel[open] summary::before {
-  transform: rotate(90deg);
-}
-
-#settingsPanel[open] summary {
-
-  background: #1769e0;
-  color: #ffffff;
-
-  border-bottom: 1px solid #1769e0;
-}
-
-#settingsPanel[open] summary::before {
-  color: #ffffff;
-}
-
-.settingsContent {
-  padding: 12px;
-  background: #f5f6f7;
-}
-
-.settingsSection {
-  margin-bottom: 12px;
-  padding: 14px;
-  border: 1px solid #dddddd;
-  border-radius: 10px;
-  background: #ffffff;
-}
-
-.settingsSection:last-child {
-  margin-bottom: 0;
-}
-
-.settingsSectionTitle {
-
-  margin: -14px -14px 12px;
-  padding: 10px 14px;
-
-  border-bottom: 1px solid #b9d7ff;
-
-  background: #dcebff;
-  color: #174a9c;
-
-  font-size: 18px;
-  font-weight: bold;
-
-  border-radius: 10px 10px 0 0;
-}
-
-.settingsToggleRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  cursor: pointer;
-}
-
-.settingsToggleRow input[type="checkbox"] {
-  width: 22px;
-  height: 22px;
-  margin: 0;
-  flex-shrink: 0;
-  cursor: pointer;
-}
-
-.settingsText {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.settingsField {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.settingsLabel {
-  font-size: 17px;
-  font-weight: bold;
-}
-
-.settingsDescription {
-  font-size: 14px;
-  line-height: 1.5;
-  color: #666666;
-}
-
-.settingsField select {
-  width: 100%;
-  min-height: 44px;
-  margin-top: 6px;
-  padding: 8px 36px 8px 10px;
-  border: 1px solid #999999;
-  border-radius: 6px;
-  background: #ffffff;
-  font-size: 17px;
-  color: #222222;
-}
-
-/* iPhoneなどの狭い画面 */
-@media (max-width: 600px) {
-  #settingsPanel summary {
-    min-height: 52px;
-    padding: 0 14px;
-  }
-
-  .settingsContent {
-    padding: 10px;
-  }
-
-  .settingsSection {
-    padding: 13px;
-  }
-
-  .settingsToggleRow {
-    gap: 12px;
-  }
-
-  .settingsField select {
-    min-height: 48px;
-    font-size: 16px;
-  }
-}
-
-/* ======================================
-   詳細設定内の操作ボタン
-====================================== */
-
-.settingsActionButton {
-
-  width: 100%;
-  min-height: 52px;
-  padding: 12px;
-
-  border: 1px solid #8b8b8b;
-  border-radius: 8px;
-
-  background: #ffffff;
-  color: #222222;
-
-  font-size: 17px;
-  font-weight: bold;
-
-  transition:
-    background-color 0.2s,
-    transform 0.15s;
-}
-
-.settingsActionButton:hover {
-  background: #f4f7fb;
-}
-
-.settingsActionButton:active {
-  transform: scale(0.98);
-}
-
-.settingsActionButton:hover {
-  background: #1457ba;
-}
-
-.settingsActionButton:active {
-  transform: scale(0.98);
-}
-
-.settingsActionDescription {
-  margin: 8px 2px 0;
-}
-
-
-/* ======================================
-   STOPボタン編集画面
-====================================== */
-
-.stopEditorScreen {
-  position: fixed;
-  inset: 0;
-
-  z-index: 1000;
-
-  width: 100%;
-  height: 100vh;
-  height: 100dvh;
-
-  overflow: auto;
-
-  background: #f3f4f6;
-}
-
-.stopEditorHeader {
-  position: sticky;
-  top: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  min-height: 64px;
-  padding:
-    max(8px, env(safe-area-inset-top))
-    16px
-    8px;
-
-  z-index: 1010;
-
-  background: rgba(255, 255, 255, 0.96);
-  border-bottom: 1px solid #d1d5db;
-}
-
-.stopEditorTitle {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.finishStopEditorButton {
-  width: 48px;
-  min-height: 44px;
-  padding: 0;
-
-  border-radius: 22px;
-
-  background: #1769e0;
-  color: #ffffff;
-
-  font-size: 27px;
-  line-height: 1;
-}
-
-.stopEditorMessage {
-  padding: 14px 16px;
-
-  background: #fff7d6;
-  color: #222222;
-
-  font-size: 15px;
-  line-height: 1.6;
-}
-
-#stopEditorStage {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-
-  width: 100%;
-  padding: 16px;
-}
-
-#stopEditorStage #videoWrapper {
-  width: min(100%, 1000px);
-
-  aspect-ratio: 16 / 9;
-  min-height: 240px;
-
-  background: #000000;
-  border: 2px solid #777777;
-  border-radius: 12px;
-}
-
-#stopEditorStage #videoWrapper video {
-  width: 100%;
-  height: 100%;
-  max-height: none;
-  margin: 0;
-
-  object-fit: contain;
-  border-radius: 0;
-}
-
-#videoWrapper.stopButtonEditing #driveStopButton {
-  cursor: move;
-
-  border: 3px dashed #ffffff;
-  box-shadow:
-    0 0 0 3px rgba(23, 105, 224, 0.9),
-    0 5px 16px rgba(0, 0, 0, 0.4);
-}
-
-#videoWrapper.stopButtonEditing #stopResizeHandle {
-  display: flex;
-}
-
-@media (max-width: 600px) {
-  .stopEditorTitle {
-    font-size: 19px;
-  }
-
-  .stopEditorMessage {
-    font-size: 14px;
-  }
-
-  #stopEditorStage {
-    padding: 10px;
-  }
-}
-
+      position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); display: none;
+      width: 140px; height: 140px; border-radius: 50%; background: rgba(255,255,255,.14);
+      border: 2px solid rgba(255,255,255,.42); z-index: 10;
+    }
+    #joystickKnob {
+      position: absolute; left: 50%; top: 50%; width: 50px; height: 50px; margin: -25px 0 0 -25px;
+      border-radius: 50%; background: rgba(255,255,255,.86); box-shadow: 0 5px 18px rgba(0,0,0,.28);
+    }
+
+    #driveStopButton, #editorStopButton {
+      position: absolute; left: 68%; top: 4%; width: 28%; height: 15%; min-width: 100px; min-height: 52px;
+      margin: 0; padding: 8px; z-index: 30; color: white; background: linear-gradient(135deg, #ef4b58, #c71f38);
+      border: 2px solid rgba(255,255,255,.88); border-radius: 12px; font-size: 20px; font-weight: 900;
+      box-shadow: 0 9px 24px rgba(145,15,37,.34); touch-action: none; user-select: none; -webkit-user-select: none;
+    }
+    #driveStopButtonText { pointer-events: none; }
+    #stopResizeHandle, #editorResizeHandle {
+      display: none; position: absolute; right: 2px; bottom: 0; width: 32px; height: 32px;
+      align-items: center; justify-content: center; border-radius: 8px 0 8px 0;
+      background: rgba(0,0,0,.48); color: white; font-size: 22px; line-height: 1; cursor: nwse-resize; touch-action: none;
+    }
+
+    .stopEditorScreen {
+      position: fixed; inset: 0; z-index: 1000; width: 100%; min-height: 100vh; min-height: 100dvh;
+      overflow: auto; background: linear-gradient(145deg, #07101e, #09182c 55%, #06101d);
+    }
+    .stopEditorHeader {
+      position: sticky; top: 0; z-index: 1010; display: flex; align-items: center; justify-content: space-between;
+      min-height: 64px; padding: max(8px, env(safe-area-inset-top)) 16px 8px;
+      background: rgba(8,20,38,.96); border-bottom: 1px solid var(--border); backdrop-filter: blur(14px);
+    }
+    .stopEditorTitle { font-size: 20px; font-weight: 850; }
+    .finishStopEditorButton {
+      width: 48px; min-height: 44px; padding: 0; border: 0; border-radius: 22px;
+      color: white; background: linear-gradient(135deg, #5677ff, #304cc9); font-size: 27px; line-height: 1;
+    }
+    .stopEditorMessage { padding: 12px 16px; color: #dce8f8; background: rgba(19,40,70,.82); font-size: 14px; line-height: 1.55; }
+    #stopEditorStage { display: flex; justify-content: center; align-items: flex-start; width: 100%; padding: 16px; }
+    #editorPreview {
+      position: relative; overflow: hidden; width: min(100%, 1000px); min-height: 240px; aspect-ratio: 16 / 9;
+      background: radial-gradient(circle at 50% 45%, #12243f, #02060c 72%); border: 1px solid var(--border); border-radius: 16px;
+      box-shadow: 0 18px 55px rgba(0,0,0,.34); touch-action: none;
+    }
+    #editorSnapshot { width: 100%; height: 100%; display: block; object-fit: contain; background: #000; }
+    #editorEmptyMessage { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; color: #71839e; text-align: center; }
+    #editorStopButton { cursor: move; border-style: dashed; box-shadow: 0 0 0 3px rgba(79,109,245,.85), 0 8px 24px rgba(0,0,0,.42); }
+    #editorResizeHandle { display: flex; }
+
+    @media (max-width: 700px) {
+      body { padding: 10px; }
+      .appShell { border-radius: 18px; }
+      .appHeader { padding: 17px 15px; }
+      .brandMark { width: 38px; height: 38px; }
+      .brandSubtitle { display: none; }
+      .connectionBadge { padding: 8px 10px; }
+      .content { padding: 11px; }
+      .roomRow { grid-template-columns: 1fr; }
+      .actionGrid { grid-template-columns: 1fr; gap: 8px; }
+      .actionButton { min-height: 52px; }
+      .settingsField { grid-template-columns: 1fr; gap: 9px; }
+      .statusBar { align-items: flex-start; flex-direction: column; }
+      .statusDetails { width: 100%; justify-content: space-between; text-align: left; }
+      #videoWrapper { min-height: 220px; }
+      #stopEditorStage { padding: 10px; }
+    }
   </style>
 </head>
-
 <body>
-  <main class="container">
-    <h1>WebRTCカメラ</h1>
+  <main class="appShell">
+    <header class="appHeader">
+      <div class="brand">
+        <div class="brandMark" aria-hidden="true"></div>
+        <div class="brandText">
+          <h1 class="brandTitle">WebRTCカメラ</h1>
+          <p class="brandSubtitle">リアルタイム映像コントロール</p>
+        </div>
+      </div>
+      <div class="connectionBadge">
+        <span id="connectionDot" class="connectionDot"></span>
+        <span id="connectionLabel">未接続</span>
+      </div>
+    </header>
 
-    <section class="panel">
-      <label for="roomName">接続する部屋名</label>
+    <div class="content">
+      <div class="roomRow">
+        <div class="roomField">
+          <label for="roomName">接続する部屋名</label>
+          <input id="roomName" type="text" value="home-camera" maxlength="50" autocomplete="off">
+        </div>
+      </div>
 
-      <input
-        id="roomName"
-        type="text"
-        value="home-camera"
-        maxlength="50"
-        autocomplete="off"
-      >
-
-      <div class="buttons">
-        <button id="sendButton" type="button">
-          iPhoneからカメラを送る
+      <div class="actionGrid">
+        <button id="sendButton" class="actionButton" type="button">
+          <span class="actionIcon" aria-hidden="true">◉</span>
+          <span>カメラを送る</span>
         </button>
-
-        <button id="viewButton" type="button">
-          パソコンで映像を見る
+        <button id="viewButton" class="actionButton" type="button">
+          <span class="actionIcon" aria-hidden="true">▣</span>
+          <span>映像を受け取る</span>
+        </button>
+        <button id="stopButton" class="actionButton" type="button" disabled>
+          <span class="actionIcon" aria-hidden="true">◯</span>
+          <span>接続を終了</span>
         </button>
       </div>
 
-     
-      
-      <button id="stopButton" type="button" disabled>
-        接続を終了
-      </button>
+      <details id="settingsPanel">
+        <summary><span>詳細設定</span></summary>
+        <div class="settingsContent">
+          <section class="settingsSection">
+            <div class="settingsSectionTitle">STOPボタン</div>
+            <button type="button" id="openStopEditorButton" class="settingsActionButton">STOPボタンを編集する</button>
+            <p class="settingsDescription settingsActionDescription">映像画面と同じ背景を確認しながら，STOPボタンの位置と大きさを変更します。</p>
+          </section>
 
-      <p class="note">
-        iPhoneとパソコンで同じ部屋名を使ってください。
-        最初は「home-camera」のままで構いません。
-      </p>
+          <section class="settingsSection">
+            <div class="settingsSectionTitle">映像受信側</div>
+            <label class="settingsField" for="pcStopKey">
+              <span class="settingsText">
+                <span class="settingsLabel">STOPキー</span>
+                <span class="settingsDescription">このキーを押すとSTOPします</span>
+              </span>
+              <select id="pcStopKey">
+                <option value="Space" selected>Space</option>
+                <option value="Escape">Escape</option>
+                <option value="Enter">Enter</option>
+                <option value="KeyS">S</option>
+                <option value="None">使用しない</option>
+              </select>
+            </label>
+          </section>
 
-<details id="settingsPanel">
-  <summary>
-    <span>詳細設定</span>
-  </summary>
+          <section class="settingsSection">
+            <div class="settingsSectionTitle">カメラ送信側</div>
+            <label class="settingsField" for="iphoneStopGesture">
+              <span class="settingsText">
+                <span class="settingsLabel">STOPジェスチャー</span>
+                <span class="settingsDescription">選択したジェスチャーでSTOPします</span>
+              </span>
+              <select id="iphoneStopGesture">
+                <option value="threeRight" selected>3本指・右スワイプ</option>
+                <option value="threeLeft">3本指・左スワイプ</option>
+                <option value="threeBoth">3本指・左右どちらでも</option>
+                <option value="none">使用しない</option>
+              </select>
+            </label>
+          </section>
+        </div>
+      </details>
 
-  <div class="settingsContent">
+      <section id="livePanel">
+        <div class="statusBar">
+          <p id="status">どちらかのボタンを押してください。</p>
+          <div class="statusDetails">
+            <p id="driveStatus">操縦命令：未受信</p>
+            <p id="xyDisplay">X：0.00　Y：0.00</p>
+          </div>
+        </div>
 
- <!-- STOPボタン -->
-<section class="settingsSection">
-  <div class="settingsSectionTitle">
-    STOPボタン
-  </div>
-
-  <button
-    type="button"
-    id="openStopEditorButton"
-    class="settingsActionButton"
-  >
-    STOPボタンを編集する
-  </button>
-
-  <p class="settingsDescription settingsActionDescription">
-    映像画面を確認しながら，STOPボタンの位置と大きさを変更します。
-  </p>
-</section>
-
-    <!-- PC設定 -->
-    <section class="settingsSection">
-      <div class="settingsSectionTitle">
-        パソコン
-      </div>
-
-      <label
-        class="settingsField"
-        for="pcStopKey"
-      >
-        <span class="settingsLabel">
-          STOPキー
-        </span>
-
-        <span class="settingsDescription">
-          このキーを押すとSTOPします
-        </span>
-
-        <select id="pcStopKey">
-          <option value="Space" selected>
-            Space
-          </option>
-
-          <option value="Escape">
-            Escape
-          </option>
-
-          <option value="Enter">
-            Enter
-          </option>
-
-          <option value="KeyS">
-            S
-          </option>
-
-          <option value="None">
-            使用しない
-          </option>
-        </select>
-      </label>
-    </section>
-
-    <!-- iPhone設定 -->
-    <section class="settingsSection">
-      <div class="settingsSectionTitle">
-        iPhone
-      </div>
-
-      <label
-        class="settingsField"
-        for="iphoneStopGesture"
-      >
-        <span class="settingsLabel">
-          STOPジェスチャー
-        </span>
-
-        <span class="settingsDescription">
-          3本指で画面をスワイプするとSTOPします
-        </span>
-
-        <select id="iphoneStopGesture">
-          <option value="threeRight" selected>
-            3本指・右スワイプ
-          </option>
-
-          <option value="threeLeft">
-            3本指・左スワイプ
-          </option>
-
-          <option value="threeBoth">
-            3本指・左右どちらでも
-          </option>
-
-          <option value="none">
-            使用しない
-          </option>
-        </select>
-      </label>
-    </section>
-
-  </div>
-</details>
-      
-    </section>
-
-    <section class="panel">
-      <p id="status">どちらかのボタンを押してください。</p>
-
-      <p id="driveStatus">
-        操縦命令：未受信
-      </p>
-
-      <p id="xyDisplay">
-  X：0.00　Y：0.00
-</p>
-
-<div id="videoWrapper">
-  <video
-    id="video"
-    autoplay
-    playsinline
-    muted
-    class="hidden"
-  ></video>
-
-  <div id="joystickArea">
-    <div id="joystickKnob"></div>
-  </div>
-
-  <button
-    id="driveStopButton"
-    type="button"
-    disabled
-  >
-    <span id="driveStopButtonText">
-      STOP
-    </span>
-
-    <span
-      id="stopResizeHandle"
-      aria-hidden="true"
-    >
-      ↘
-    </span>
-  </button>
-</div>
-    </section>
-
-
-    <div
-  id="stopEditorScreen"
-  class="stopEditorScreen hidden"
->
-  <header class="stopEditorHeader">
-    <div class="stopEditorTitle">
-      STOPボタン編集
+        <div id="videoWrapper">
+          <video id="video" autoplay playsinline muted class="hidden"></video>
+          <div id="joystickArea"><div id="joystickKnob"></div></div>
+          <button id="driveStopButton" type="button" disabled>
+            <span id="driveStopButtonText">STOP</span>
+            <span id="stopResizeHandle" aria-hidden="true">↘</span>
+          </button>
+        </div>
+      </section>
     </div>
-
-    <button
-      type="button"
-      id="finishStopEditorButton"
-      class="finishStopEditorButton"
-      aria-label="編集を完了する"
-    >
-      ✓
-    </button>
-  </header>
-
-  <div class="stopEditorMessage">
-    STOPボタン本体をドラッグすると移動できます。<br>
-    右下の矢印をドラッグすると大きさを変更できます。
-  </div>
-
-  <div id="stopEditorStage"></div>
-</div>
   </main>
+
+  <div id="stopEditorScreen" class="stopEditorScreen hidden">
+    <header class="stopEditorHeader">
+      <div class="stopEditorTitle">STOPボタン編集</div>
+      <button type="button" id="finishStopEditorButton" class="finishStopEditorButton" aria-label="編集を完了する">✓</button>
+    </header>
+    <div class="stopEditorMessage">STOPボタン本体をドラッグすると移動できます。右下の矢印をドラッグすると大きさを変更できます。</div>
+    <div id="stopEditorStage">
+      <div id="editorPreview">
+        <canvas id="editorSnapshot" class="hidden"></canvas>
+        <div id="editorEmptyMessage">カメラ映像がないため，映像枠の上で配置を編集します。</div>
+        <button id="editorStopButton" type="button">
+          <span>STOP</span>
+          <span id="editorResizeHandle" aria-hidden="true">↘</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script>
     "use strict";
@@ -839,6 +637,14 @@ const pcStopKey =
 
 const iphoneStopGesture =
   document.getElementById("iphoneStopGesture");
+
+const connectionDot = document.getElementById("connectionDot");
+const connectionLabel = document.getElementById("connectionLabel");
+const editorPreview = document.getElementById("editorPreview");
+const editorSnapshot = document.getElementById("editorSnapshot");
+const editorEmptyMessage = document.getElementById("editorEmptyMessage");
+const editorStopButton = document.getElementById("editorStopButton");
+const editorResizeHandle = document.getElementById("editorResizeHandle");
 
     let joystickCenterX = 0;
     let joystickCenterY = 0;
@@ -907,6 +713,8 @@ const videoWrapperOriginalNextSibling =
   driveStopButtonText.textContent = "STOP";
 
   stopButton.disabled = false;
+  connectionDot.classList.add("connected");
+  connectionLabel.textContent = "接続中";
 }
 
     function setControlsDisconnected() {
@@ -915,6 +723,8 @@ const videoWrapperOriginalNextSibling =
       roomInput.disabled = false;
       driveStopButton.disabled = true;
       stopButton.disabled = true;
+      connectionDot.classList.remove("connected");
+      connectionLabel.textContent = "未接続";
     }
 
     function getRoomName() {
@@ -1871,8 +1681,188 @@ iphoneStopGesture.addEventListener(
 // 起動時に読み込み
 // ----------
 
+
+// ======================================
+// スタイリッシュ画面とSTOPボタン編集
+// ======================================
+
+function applyStopButtonLayout(layout) {
+  if (!layout) return;
+  const left = Number(layout.left);
+  const top = Number(layout.top);
+  const width = Number(layout.width);
+  const height = Number(layout.height);
+  if (![left, top, width, height].every(Number.isFinite)) return;
+
+  driveStopButton.style.left = left + "%";
+  driveStopButton.style.top = top + "%";
+  driveStopButton.style.width = width + "%";
+  driveStopButton.style.height = height + "%";
+}
+
+function getStopButtonLayout() {
+  const wrapperRect = videoWrapper.getBoundingClientRect();
+  const buttonRect = driveStopButton.getBoundingClientRect();
+  if (wrapperRect.width <= 0 || wrapperRect.height <= 0) return null;
+  return {
+    left: (buttonRect.left - wrapperRect.left) / wrapperRect.width * 100,
+    top: (buttonRect.top - wrapperRect.top) / wrapperRect.height * 100,
+    width: buttonRect.width / wrapperRect.width * 100,
+    height: buttonRect.height / wrapperRect.height * 100
+  };
+}
+
+function saveStopButtonLayout(layout) {
+  localStorage.setItem("stopButtonLayout", JSON.stringify(layout));
+}
+
+function loadStopButtonLayout() {
+  try {
+    const saved = localStorage.getItem("stopButtonLayout");
+    if (saved) applyStopButtonLayout(JSON.parse(saved));
+  } catch (error) {
+    console.warn("STOPボタン配置を読み込めませんでした", error);
+  }
+}
+
+function copyLayoutToEditor() {
+  const layout = getStopButtonLayout() || { left: 68, top: 4, width: 28, height: 15 };
+  editorStopButton.style.left = layout.left + "%";
+  editorStopButton.style.top = layout.top + "%";
+  editorStopButton.style.width = layout.width + "%";
+  editorStopButton.style.height = layout.height + "%";
+  editorStopButton.querySelector("span").textContent = driveStopButtonText.textContent;
+}
+
+function captureEditorSnapshot() {
+  const hasVideo = videoElement.srcObject && videoElement.readyState >= 2 && videoElement.videoWidth > 0;
+  if (!hasVideo) {
+    editorSnapshot.classList.add("hidden");
+    editorEmptyMessage.classList.remove("hidden");
+    return;
+  }
+
+  editorSnapshot.width = videoElement.videoWidth;
+  editorSnapshot.height = videoElement.videoHeight;
+  const context = editorSnapshot.getContext("2d");
+  context.drawImage(videoElement, 0, 0, editorSnapshot.width, editorSnapshot.height);
+  editorSnapshot.classList.remove("hidden");
+  editorEmptyMessage.classList.add("hidden");
+}
+
+function openStopEditor() {
+  stopEditorActive = true;
+  stopButtonDisabledBeforeEditing = driveStopButton.disabled;
+  updateDriveStopButtonAvailability();
+  captureEditorSnapshot();
+  copyLayoutToEditor();
+  stopEditorScreen.classList.remove("hidden");
+  document.body.style.overflow = "hidden";
+}
+
+function finishStopEditor() {
+  const previewRect = editorPreview.getBoundingClientRect();
+  const buttonRect = editorStopButton.getBoundingClientRect();
+  const layout = {
+    left: (buttonRect.left - previewRect.left) / previewRect.width * 100,
+    top: (buttonRect.top - previewRect.top) / previewRect.height * 100,
+    width: buttonRect.width / previewRect.width * 100,
+    height: buttonRect.height / previewRect.height * 100
+  };
+
+  applyStopButtonLayout(layout);
+  saveStopButtonLayout(layout);
+  stopEditorActive = false;
+  stopEditorScreen.classList.add("hidden");
+  document.body.style.overflow = "";
+  updateDriveStopButtonAvailability();
+}
+
+function beginEditorMove(event) {
+  if (event.target === editorResizeHandle) return;
+  event.preventDefault();
+  stopEditAction = "move";
+  stopEditStartX = event.clientX;
+  stopEditStartY = event.clientY;
+  const previewRect = editorPreview.getBoundingClientRect();
+  const buttonRect = editorStopButton.getBoundingClientRect();
+  stopEditStartLeft = buttonRect.left - previewRect.left;
+  stopEditStartTop = buttonRect.top - previewRect.top;
+  editorStopButton.setPointerCapture(event.pointerId);
+}
+
+function beginEditorResize(event) {
+  event.preventDefault();
+  event.stopPropagation();
+  stopEditAction = "resize";
+  stopEditStartX = event.clientX;
+  stopEditStartY = event.clientY;
+  const buttonRect = editorStopButton.getBoundingClientRect();
+  stopEditStartWidth = buttonRect.width;
+  stopEditStartHeight = buttonRect.height;
+  editorResizeHandle.setPointerCapture(event.pointerId);
+}
+
+function moveEditorButton(event) {
+  if (!stopEditAction) return;
+  event.preventDefault();
+
+  const previewRect = editorPreview.getBoundingClientRect();
+  const dx = event.clientX - stopEditStartX;
+  const dy = event.clientY - stopEditStartY;
+
+  if (stopEditAction === "move") {
+    const buttonRect = editorStopButton.getBoundingClientRect();
+    const maxLeft = Math.max(0, previewRect.width - buttonRect.width);
+    const maxTop = Math.max(0, previewRect.height - buttonRect.height);
+    const left = Math.max(0, Math.min(maxLeft, stopEditStartLeft + dx));
+    const top = Math.max(0, Math.min(maxTop, stopEditStartTop + dy));
+    editorStopButton.style.left = left / previewRect.width * 100 + "%";
+    editorStopButton.style.top = top / previewRect.height * 100 + "%";
+  } else {
+    const currentRect = editorStopButton.getBoundingClientRect();
+    const left = currentRect.left - previewRect.left;
+    const top = currentRect.top - previewRect.top;
+    const minWidth = Math.min(100, previewRect.width);
+    const minHeight = Math.min(52, previewRect.height);
+    const width = Math.max(minWidth, Math.min(previewRect.width - left, stopEditStartWidth + dx));
+    const height = Math.max(minHeight, Math.min(previewRect.height - top, stopEditStartHeight + dy));
+    editorStopButton.style.width = width / previewRect.width * 100 + "%";
+    editorStopButton.style.height = height / previewRect.height * 100 + "%";
+  }
+}
+
+function endEditorAction() {
+  stopEditAction = null;
+}
+
+settingsPanel.addEventListener("toggle", () => {
+  document.body.classList.toggle("settings-open", settingsPanel.open);
+});
+
+openStopEditorButton.addEventListener("click", openStopEditor);
+finishStopEditorButton.addEventListener("click", finishStopEditor);
+editorStopButton.addEventListener("pointerdown", beginEditorMove);
+editorResizeHandle.addEventListener("pointerdown", beginEditorResize);
+window.addEventListener("pointermove", moveEditorButton, { passive: false });
+window.addEventListener("pointerup", endEditorAction);
+window.addEventListener("pointercancel", endEditorAction);
+
+// 映像受信側のSTOPキー
+window.addEventListener("keydown", event => {
+  if (role !== "viewer" || stopEditorActive || settingsPanel.open || remoteSettingsActive) return;
+  if (pcStopKey.value === "None" || event.code !== pcStopKey.value) return;
+  if (event.repeat) return;
+  toggleDriveStop(event);
+});
+
+loadStopButtonLayout();
+
 loadSettings();
     
   </script>
 </body>
 </html>
+さっきと全然見た目が違う。ボタンは横並びにして
+
+画像を作成しています
