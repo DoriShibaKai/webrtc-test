@@ -185,40 +185,153 @@
     background: rgba(255,255,255,0.8);
 }
 
-    #settingsPanel {
+    /* ======================================
+   詳細設定
+====================================== */
+
+#settingsPanel {
   margin-top: 14px;
+  border: 1px solid #d6d6d6;
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
 }
 
 #settingsPanel summary {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 16px;
   cursor: pointer;
+  font-size: 16px;
   font-weight: bold;
-  font-size: 17px;
+  user-select: none;
+  list-style: none;
 }
 
-.settingsGroup {
-  margin-top: 12px;
+#settingsPanel summary::-webkit-details-marker {
+  display: none;
+}
+
+#settingsPanel summary::before {
+  content: "▶";
+  display: inline-block;
+  margin-right: 8px;
+  font-size: 12px;
+  transition: transform 0.2s;
+}
+
+#settingsPanel[open] summary::before {
+  transform: rotate(90deg);
+}
+
+#settingsPanel[open] summary {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.settingsContent {
+  padding: 12px;
+  background: #f5f6f7;
+}
+
+.settingsSection {
+  margin-bottom: 12px;
   padding: 14px;
-  border: 1px solid #ccc;
+  border: 1px solid #dddddd;
   border-radius: 10px;
-  background: #fafafa;
+  background: #ffffff;
 }
 
-.settingsGroup h3 {
-  margin-top: 0;
-  margin-bottom: 8px;
-  font-size: 16px;
+.settingsSection:last-child {
+  margin-bottom: 0;
 }
 
-.settingsGroup select {
+.settingsSectionTitle {
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e5e5;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.settingsToggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+}
+
+.settingsToggleRow input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.settingsText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.settingsField {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.settingsLabel {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.settingsDescription {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #666666;
+}
+
+.settingsField select {
   width: 100%;
-  padding: 10px;
+  min-height: 44px;
+  margin-top: 6px;
+  padding: 8px 36px 8px 10px;
+  border: 1px solid #999999;
+  border-radius: 6px;
+  background: #ffffff;
   font-size: 16px;
+  color: #222222;
 }
 
-.settingsGroup hr {
-  margin: 18px 0;
+/* iPhoneなどの狭い画面 */
+@media (max-width: 600px) {
+  #settingsPanel summary {
+    min-height: 52px;
+    padding: 0 14px;
+  }
+
+  .settingsContent {
+    padding: 10px;
+  }
+
+  .settingsSection {
+    padding: 13px;
+  }
+
+  .settingsToggleRow {
+    gap: 12px;
+  }
+
+  .settingsField select {
+    min-height: 48px;
+    font-size: 16px;
+  }
 }
-    
+
+
+
   </style>
 </head>
 
@@ -260,58 +373,118 @@
         最初は「home-camera」のままで構いません。
       </p>
 
-      <details id="settingsPanel">
-  <summary>詳細設定</summary>
+<details id="settingsPanel">
+  <summary>
+    <span>詳細設定</span>
+  </summary>
 
-  <div class="settingsGroup">
+  <div class="settingsContent">
 
-    <h3>STOPボタン</h3>
+    <!-- STOPボタン -->
+    <section class="settingsSection">
+      <div class="settingsSectionTitle">
+        STOPボタン
+      </div>
 
-    <label>
-      <input
-        type="checkbox"
-        id="editStopButton"
+      <label class="settingsToggleRow">
+        <div class="settingsText">
+          <span class="settingsLabel">
+            配置・サイズを変更する
+          </span>
+
+          <span class="settingsDescription">
+            STOPボタンを移動・拡大・縮小できる状態にします
+          </span>
+        </div>
+
+        <input
+          type="checkbox"
+          id="editStopButton"
+        >
+      </label>
+    </section>
+
+    <!-- PC設定 -->
+    <section class="settingsSection">
+      <div class="settingsSectionTitle">
+        パソコン
+      </div>
+
+      <label
+        class="settingsField"
+        for="pcStopKey"
       >
-      配置・サイズを変更する
-    </label>
+        <span class="settingsLabel">
+          STOPキー
+        </span>
 
-    <hr>
+        <span class="settingsDescription">
+          このキーを押すとSTOPします
+        </span>
 
-    <h3>PC STOPキー</h3>
+        <select id="pcStopKey">
+          <option value="Space" selected>
+            Space
+          </option>
 
-    <select id="pcStopKey">
-      <option value="Space" selected>Space</option>
-      <option value="Escape">Escape</option>
-      <option value="Enter">Enter</option>
-      <option value="KeyS">S</option>
-      <option value="None">使用しない</option>
-    </select>
+          <option value="Escape">
+            Escape
+          </option>
 
-    <hr>
+          <option value="Enter">
+            Enter
+          </option>
 
-    <h3>iPhone STOPジェスチャー</h3>
+          <option value="KeyS">
+            S
+          </option>
 
-    <select id="iphoneStopGesture">
-      <option value="threeRight" selected>
-        3本指右スワイプ
-      </option>
+          <option value="None">
+            使用しない
+          </option>
+        </select>
+      </label>
+    </section>
 
-      <option value="threeLeft">
-        3本指左スワイプ
-      </option>
+    <!-- iPhone設定 -->
+    <section class="settingsSection">
+      <div class="settingsSectionTitle">
+        iPhone
+      </div>
 
-      <option value="threeBoth">
-        3本指左右どちらでも
-      </option>
+      <label
+        class="settingsField"
+        for="iphoneStopGesture"
+      >
+        <span class="settingsLabel">
+          STOPジェスチャー
+        </span>
 
-      <option value="none">
-        使用しない
-      </option>
+        <span class="settingsDescription">
+          3本指で画面をスワイプするとSTOPします
+        </span>
 
-    </select>
+        <select id="iphoneStopGesture">
+          <option value="threeRight" selected>
+            3本指・右スワイプ
+          </option>
+
+          <option value="threeLeft">
+            3本指・左スワイプ
+          </option>
+
+          <option value="threeBoth">
+            3本指・左右どちらでも
+          </option>
+
+          <option value="none">
+            使用しない
+          </option>
+        </select>
+      </label>
+    </section>
 
   </div>
-
 </details>
       
     </section>
