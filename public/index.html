@@ -321,6 +321,9 @@
         const state = peerConnection.connectionState;
 
         if (state === "connected") {
+
+          console.log(driveChannel);
+          
           setStatus(
             role === "sender"
               ? "接続成功：iPhoneの映像を送信しています。"
