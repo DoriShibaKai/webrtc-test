@@ -909,7 +909,7 @@ function applyDriveStopState(stopped) {
   driveChannel.send(JSON.stringify(stopStateData));
 }
 
-    function handleDriveChannelMessage(event) {
+   function handleDriveChannelMessage(event) {
   console.log("受信", event.data);
 
   try {
@@ -917,12 +917,32 @@ function applyDriveStopState(stopped) {
 
     console.log("受信した命令", command);
 
+    // STOP・STOP解除の状態を受信した場合
     if (command.type === "drive-stop-state") {
       applyDriveStopState(command.stopped === true);
       return;
     }
 
+    // 操縦命令を受信した場合
     if (command.type === "drive") {
+
+      // 非常停止中は，0以外の操縦命令をすべて無視する
+      if (
+        driveStopped &&
+        (command.x !== 0 || command.y !== 0)
+      ) {
+        console.log(
+          "非常停止中のため操縦命令を無視しました",
+          command
+        );
+
+        driveStatusElement.textContent =
+          "非常停止中です。\n" +
+          "操縦命令を無視しました。";
+
+        return;
+      }
+
       driveStatusElement.textContent =
         "操縦命令を受信しました。\n" +
         "X：" + command.x + "\n" +
