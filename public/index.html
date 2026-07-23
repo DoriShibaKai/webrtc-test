@@ -317,51 +317,32 @@
   };
 
 };
-  driveChannel.onmessage = event => {
 
-    console.log("受信", event.data);
+peerConnection.ontrack = event => {
+  if (role !== "viewer") {
+    return;
+  }
 
-    try {
+  const [remoteStream] = event.streams;
 
-        const command = JSON.parse(event.data);
+  if (remoteStream) {
+    videoElement.srcObject = remoteStream;
+  } else {
+    const stream = new MediaStream();
+    stream.addTrack(event.track);
+    videoElement.srcObject = stream;
+  }
 
-        console.log(command);
+  videoElement.muted = false;
+  videoElement.classList.remove("hidden");
 
-    } catch (e) {
-
-        console.error("JSONではありません");
-
-    }
-
+  videoElement.play().catch(() => {
+    setStatus(
+      "映像を受信しました。\n" +
+      "再生されない場合は、黒い映像部分を一度押してください。"
+    );
+  });
 };
-
-};
-      
-      peerConnection.ontrack = event => {
-        if (role !== "viewer") {
-          return;
-        }
-
-        const [remoteStream] = event.streams;
-
-        if (remoteStream) {
-          videoElement.srcObject = remoteStream;
-        } else {
-          const stream = new MediaStream();
-          stream.addTrack(event.track);
-          videoElement.srcObject = stream;
-        }
-
-        videoElement.muted = false;
-        videoElement.classList.remove("hidden");
-
-        videoElement.play().catch(() => {
-          setStatus(
-            "映像を受信しました。\n" +
-            "再生されない場合は、黒い映像部分を一度押してください。"
-          );
-        });
-      };
 
       peerConnection.onconnectionstatechange = () => {
 
