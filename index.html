@@ -267,14 +267,23 @@
   };
 
   sendButton.onclick = () => {
-    const text = messageInput.value;
+
     if (!channel || channel.readyState !== "open") {
-      setStatus("まだ接続されていません");
-      return;
+        setStatus("まだ接続されていません");
+        return;
     }
-    channel.send(text);
-    log("送信：" + text);
-  };
+
+    const command = {
+        type: "drive",
+        x: 0.5,
+        y: 0.8,
+        sequence: 1
+    };
+
+    channel.send(JSON.stringify(command));
+
+    log("送信：" + JSON.stringify(command));
+};
 
   document.querySelectorAll("[data-copy]").forEach((button) => {
     button.onclick = async () => {
