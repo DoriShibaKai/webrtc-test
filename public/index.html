@@ -247,40 +247,44 @@
       console.log("createPeerConnection開始");
       peerConnection = new RTCPeerConnection(rtcConfiguration);
 
-      if (role === "viewer") {
+      if (role === "sender") {
 
   driveChannel =
     peerConnection.createDataChannel("drive");
 
-  driveChannel.onclosing = () => {
-  console.log("PC側 DataChannel closing");
-};
-
-driveChannel.onerror = error => {
-  console.error("PC側 DataChannel error", error);
-};
-
-  console.log("作成直後", driveChannel.readyState);
+  console.log(
+    "iPhone側でDataChannel作成直後",
+    driveChannel.readyState
+  );
 
   driveChannel.onopen = () => {
+    console.log("iPhone側 DataChannel 接続");
+    console.log("iPhone側の状態", driveChannel.readyState);
+  };
 
-    console.log("Drive DataChannel 接続");
-
-    const command = {
-        type: "drive",
-        x: 0.5,
-        y: 0.8,
-        sequence: 1
-    };
-
-    driveChannel.send(JSON.stringify(command));
-
-    console.log("送信", command);
-
-};
+  driveChannel.onclosing = () => {
+    console.log("iPhone側 DataChannel closing");
+  };
 
   driveChannel.onclose = () => {
-    console.log("Drive DataChannel 切断");
+    console.log("iPhone側 DataChannel 切断");
+  };
+
+  driveChannel.onerror = error => {
+    console.error("iPhone側 DataChannel error", error);
+  };
+
+  driveChannel.onmessage = event => {
+    console.log("iPhone側で受信", event.data);
+
+    try {
+      const command = JSON.parse(event.data);
+      console.log("iPhone側で受信した命令", command);
+    } catch (error) {
+      console.error(
+        "受信データをJSONとして読めませんでした"
+      );
+    }
   };
 
 }
@@ -302,25 +306,38 @@ driveChannel.onerror = error => {
 
   driveChannel = event.channel;
 
+  console.log(
+    "PC側でDataChannelを受信",
+    driveChannel.readyState
+  );
+
   driveChannel.onopen = () => {
-    console.log("Ver 2");
-    console.log("iPhone側 Drive DataChannel 接続");
-    console.log("iPhone側の状態", driveChannel.readyState);
+    console.log("Ver 4");
+    console.log("PC側 DataChannel 接続");
+    console.log("PC側の状態", driveChannel.readyState);
+
+    const command = {
+      type: "drive",
+      x: 0.5,
+      y: 0.8,
+      sequence: 1
+    };
+
+    driveChannel.send(JSON.stringify(command));
+
+    console.log("PC側から送信", command);
+  };
+
+  driveChannel.onclosing = () => {
+    console.log("PC側 DataChannel closing");
   };
 
   driveChannel.onclose = () => {
-    console.log("Drive DataChannel 切断");
+    console.log("PC側 DataChannel 切断");
   };
 
-  driveChannel.onmessage = event => {
-    console.log("受信", event.data);
-
-    try {
-      const command = JSON.parse(event.data);
-      console.log("受信した命令", command);
-    } catch (error) {
-      console.error("受信データをJSONとして読めませんでした");
-    }
+  driveChannel.onerror = error => {
+    console.error("PC側 DataChannel error", error);
   };
 
 };
