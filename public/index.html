@@ -251,8 +251,21 @@
     peerConnection.createDataChannel("drive");
 
   driveChannel.onopen = () => {
+
     console.log("Drive DataChannel 接続");
-  };
+
+    const command = {
+        type: "drive",
+        x: 0.5,
+        y: 0.8,
+        sequence: 1
+    };
+
+    driveChannel.send(JSON.stringify(command));
+
+    console.log("送信", command);
+
+};
 
   driveChannel.onclose = () => {
     console.log("Drive DataChannel 切断");
@@ -286,8 +299,22 @@
   };
 
   driveChannel.onmessage = event => {
+
     console.log("受信", event.data);
-  };
+
+    try {
+
+        const command = JSON.parse(event.data);
+
+        console.log(command);
+
+    } catch (e) {
+
+        console.error("JSONではありません");
+
+    }
+
+};
 
 };
       
