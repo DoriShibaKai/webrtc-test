@@ -1474,14 +1474,18 @@ function stopDrivingForSettings() {
     return;
   }
 
+  // 自分側を停止状態にする
   applyDriveStopState(true);
 
   if (
     driveChannel &&
     driveChannel.readyState === "open"
   ) {
+    // 相手へ停止命令を送る
     sendStopCommand();
-    sendDriveStopState(true);
+
+    // 「詳細設定を開いた」ことを相手へ送る
+    sendSettingsState(true);
   }
 
   driveStatusElement.textContent =
@@ -1497,6 +1501,9 @@ function stopDrivingForSettings() {
 
   } else if (driveStopped) {
 
+    // 詳細設定を閉じたことを相手へ送る
+    sendSettingsState(false);
+
     driveStatusElement.textContent =
       "詳細設定を終了しました。\n" +
       "「解除」を押すと操縦を再開できます。";
@@ -1504,6 +1511,28 @@ function stopDrivingForSettings() {
 
 });
 
+function sendSettingsState(active) {
+
+  if (
+    !driveChannel ||
+    driveChannel.readyState !== "open"
+  ) {
+    return;
+  }
+
+  driveSequence++;
+
+  const settingsStateData = {
+    type: "settings-state",
+    active: active,
+    sequence: driveSequence
+  };
+
+  driveChannel.send(
+    JSON.stringify(settingsStateData)
+  );
+}
+    
     function sendDriveStopState(stopped) {
   if (
     !driveChannel ||
@@ -1531,11 +1560,35 @@ function stopDrivingForSettings() {
 
     console.log("受信した命令", command);
 
-    // STOP・STOP解除の状態を受信した場合
-    if (command.type === "drive-stop-state") {
-      applyDriveStopState(command.stopped === true);
-      return;
-    }
+   // 詳細設定の開閉状態を受信した場合
+if (command.type === "settings-state") {
+
+  if (command.active === true) {
+
+    // 相手が詳細設定を開いた
+    applyDriveStopState(true);
+
+    driveStatusElement.textContent =
+      "詳細設定中です。\n" +
+      "操縦は一時停止しています。";
+
+  } else {
+
+    // 相手が詳細設定を閉じた
+    driveStatusElement.textContent =
+      "詳細設定を終了しました。\n" +
+      "「解除」を押すと操縦を再開できます。";
+  }
+
+  return;
+}
+
+
+// STOP・STOP解除の状態を受信した場合
+if (command.type === "drive-stop-state") {
+  applyDriveStopState(command.stopped === true);
+  return;
+}
 
     // 操縦命令を受信した場合
     if (command.type === "drive") {
