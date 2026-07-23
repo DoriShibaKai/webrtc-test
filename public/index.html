@@ -250,6 +250,8 @@
   driveChannel =
     peerConnection.createDataChannel("drive");
 
+  console.log("作成直後", driveChannel.readyState);
+
   driveChannel.onopen = () => {
 
     console.log("Drive DataChannel 接続");
