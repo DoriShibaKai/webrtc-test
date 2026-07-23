@@ -275,17 +275,27 @@
   };
 
   driveChannel.onmessage = event => {
-    console.log("iPhone側で受信", event.data);
+  console.log("受信", event.data);
 
-    try {
-      const command = JSON.parse(event.data);
-      console.log("iPhone側で受信した命令", command);
-    } catch (error) {
-      console.error(
-        "受信データをJSONとして読めませんでした"
+  try {
+    const command = JSON.parse(event.data);
+
+    console.log("受信した命令", command);
+
+    if (command.type === "drive") {
+      setStatus(
+        "操縦命令を受信しました。\n" +
+        "X：" + command.x + "\n" +
+        "Y：" + command.y + "\n" +
+        "sequence：" + command.sequence
       );
     }
-  };
+
+  } catch (error) {
+    console.error("受信データをJSONとして読めませんでした");
+    setStatus("受信データの読み取りに失敗しました。");
+  }
+};
 
 }
 
@@ -370,14 +380,14 @@ peerConnection.ontrack = event => {
 
       peerConnection.onconnectionstatechange = () => {
 
-        console.log("Ver 3");
+        console.log("Ver 5");
         
         const state = peerConnection.connectionState;
 
         if (state === "connected") {
 
           console.log("★★★ connected ★★★");
-          console.log("状態=", driveChannel?.readyState);
+          
 
 if (driveChannel) {
     console.log("状態", driveChannel.readyState);
