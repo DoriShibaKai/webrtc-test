@@ -91,6 +91,14 @@
       color: #222;
     }
 
+    #driveStopButton {
+      width: 100%;
+      margin-top: 12px;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
     button:disabled {
       cursor: default;
       opacity: 0.5;
@@ -1019,27 +1027,35 @@ function applyDriveStopState(stopped) {
 sendButton.addEventListener("click", startSender);
 viewButton.addEventListener("click", startViewer);
 
-driveStopButton.addEventListener("click", () => {
+function toggleDriveStop(event) {
+  event.preventDefault();
+  event.stopPropagation();
+
   const newStoppedState = !driveStopped;
 
   if (newStoppedState) {
-    // この端末を非常停止状態にする
+    // 押した端末を直ちに非常停止にする
     applyDriveStopState(true);
 
-    // X=0，Y=0を相手側へ送る
+    // 相手へX=0，Y=0を送る
     sendStopCommand();
 
-    // 相手側のSTOP表示も有効にする
+    // 相手側も非常停止表示にする
     sendDriveStopState(true);
 
   } else {
-    // この端末の非常停止を解除する
+    // 押した端末の非常停止を解除する
     applyDriveStopState(false);
 
-    // 相手側のSTOP表示も解除する
+    // 相手側も解除する
     sendDriveStopState(false);
   }
-});
+}
+
+driveStopButton.addEventListener(
+  "pointerdown",
+  toggleDriveStop
+);
     
 stopButton.addEventListener("click", () => stopAll(true));
 
