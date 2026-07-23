@@ -802,8 +802,15 @@ if (driveChannel) {
     videoWrapper.addEventListener("pointerdown", event => {
   const rect = videoWrapper.getBoundingClientRect();
 
-  joystickCenterX = event.clientX - rect.left;
-  joystickCenterY = event.clientY - rect.top;
+    joystickCenterX = Math.max(
+    joystickRadius,
+    Math.min(rect.width - joystickRadius, event.clientX - rect.left)
+  );
+
+  joystickCenterY = Math.max(
+    joystickRadius,
+    Math.min(rect.height - joystickRadius, event.clientY - rect.top)
+  );
 
   joystickArea.style.left = joystickCenterX + "px";
   joystickArea.style.top = joystickCenterY + "px";
