@@ -333,19 +333,22 @@
   }
 
   .mainActionText {
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 3px;
-    text-align: left;
-  }
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
 
-  .mainActionTitle {
-    font-size: 15px;
-    font-weight: bold;
-    line-height: 1.25;
-  }
+.mainActionTitle {
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+ 
 
   .mainActionDescription {
     color: rgba(255, 255, 255, 0.72);
@@ -593,11 +596,12 @@
   display: inline-flex;
   align-items: center;
 
+  min-height: 24px;
   margin: 0;
-  padding: 3px 8px;
+  padding: 3px 7px;
 
   border: 1px solid rgba(129, 157, 210, 0.16);
-  border-radius: 999px;
+  border-radius: 8px;
 
   background: rgba(4, 12, 28, 0.72);
   color: #dce7ff;
@@ -609,7 +613,7 @@
     monospace;
 
   font-size: 12px;
-  line-height: 1.2;
+  line-height: 18px;
 }
 
 #xyDisplay {
@@ -621,9 +625,13 @@
   flex: 0 1 auto;
   max-width: calc(100% - 125px);
 
+  justify-content: flex-start;
+  text-align: left;
+
+  padding-left: 7px;
+
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  border-radius: 10px;
 }
 
 .hiddenStatus {
@@ -969,9 +977,9 @@
     }
 
     .mainActionTitle {
-      font-size: 11px;
-      white-space: nowrap;
-    }
+  font-size: 12px;
+  white-space: nowrap;
+}
 
     .mainActionDescription {
       display: none;
@@ -999,9 +1007,10 @@
 
 #xyDisplay,
 #driveStatus {
-  padding: 2px 7px;
+  min-height: 22px;
+  padding: 2px 6px;
   font-size: 10px;
-  line-height: 1.2;
+  line-height: 16px;
 }
 
 #driveStatus {
@@ -1178,15 +1187,11 @@
             </svg>
           </span>
 
-          <span class="mainActionText">
-            <span class="mainActionTitle">
-              iPhoneから送信
-            </span>
-
-            <span class="mainActionDescription">
-              iPhoneのカメラを送る
-            </span>
-          </span>
+         <span class="mainActionText">
+  <span class="mainActionTitle">
+    カメラを送信
+  </span>
+</span>
 
         </button>
 
@@ -1226,15 +1231,11 @@
             </svg>
           </span>
 
-          <span class="mainActionText">
-            <span class="mainActionTitle">
-              パソコンで見る
-            </span>
-
-            <span class="mainActionDescription">
-              PCで映像を見る
-            </span>
-          </span>
+         <span class="mainActionText">
+  <span class="mainActionTitle">
+    映像を受信
+  </span>
+</span>
 
         </button>
 
