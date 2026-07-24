@@ -580,8 +580,7 @@
   ====================================== */
 
  
-
- .compactStatusRow {
+.compactStatusRow {
   display: flex;
   align-items: flex-start;
   width: 100%;
@@ -591,9 +590,9 @@
 
 #xyDisplay,
 #driveStatus {
-  display: inline-flex;
-  align-items: center;
+  display: block;
 
+  box-sizing: border-box;
   min-height: 24px;
   margin: 0;
   padding: 3px 7px;
@@ -611,7 +610,7 @@
     monospace;
 
   font-size: 12px;
-  line-height: 18px;
+  line-height: 16px;
 }
 
 #xyDisplay {
@@ -623,14 +622,11 @@
   flex: 0 1 auto;
   max-width: calc(100% - 125px);
 
-  justify-content: flex-start;
   text-align: left;
-
-  padding-left: 7px;
-
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+ 
 
 .hiddenStatus {
   display: none;
