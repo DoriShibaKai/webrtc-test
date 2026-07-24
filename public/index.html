@@ -580,22 +580,21 @@
     padding: 12px;
   }
 
-  .compactStatusRow {
+ .compactStatusRow {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 7px;
-  margin-bottom: 9px;
+  align-items: flex-start;
+  width: 100%;
+  gap: 6px;
+  margin: 0 0 6px;
 }
 
-#driveStatus,
-#xyDisplay {
+#xyDisplay,
+#driveStatus {
   display: inline-flex;
   align-items: center;
 
-  min-height: 31px;
   margin: 0;
-  padding: 6px 10px;
+  padding: 3px 8px;
 
   border: 1px solid rgba(129, 157, 210, 0.16);
   border-radius: 999px;
@@ -611,11 +610,28 @@
 
   font-size: 12px;
   line-height: 1.2;
+}
+
+#xyDisplay {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+#driveStatus {
+  flex: 0 1 auto;
+  max-width: calc(100% - 125px);
+
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  border-radius: 10px;
 }
 
 .hiddenStatus {
   display: none;
+}
+
+.connectionPanel {
+  padding: 8px 10px 10px;
 }
 
   /* ======================================
@@ -977,15 +993,23 @@
     }
 
     .compactStatusRow {
-  gap: 5px;
-  margin-bottom: 6px;
+  gap: 4px;
+  margin-bottom: 5px;
 }
 
-#driveStatus,
-#xyDisplay {
-  min-height: 26px;
-  padding: 4px 8px;
+#xyDisplay,
+#driveStatus {
+  padding: 2px 7px;
   font-size: 10px;
+  line-height: 1.2;
+}
+
+#driveStatus {
+  max-width: calc(100% - 105px);
+}
+
+.connectionPanel {
+  padding: 7px 8px 8px;
 }
 
     #videoWrapper {
@@ -1415,14 +1439,14 @@
 
       <div class="statusGrid">
 
-        <div class="compactStatusRow">
-
-  <p id="driveStatus">
-    操縦命令：未受信
-  </p>
+       <div class="compactStatusRow">
 
   <p id="xyDisplay">
     X：0.00　Y：0.00
+  </p>
+
+  <p id="driveStatus">
+    操縦命令：未受信
   </p>
 
   <p id="status" class="hiddenStatus">
