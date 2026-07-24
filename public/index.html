@@ -275,34 +275,35 @@
     gap: 10px;
   }
 
-  .mainActionButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+ .mainActionButton {
+  position: relative;
 
-    width: 100%;
-    min-width: 0;
-    min-height: 72px;
-    padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    overflow: hidden;
+  width: 100%;
+  min-width: 0;
+  min-height: 72px;
+  padding: 10px 12px;
 
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 13px;
+  overflow: hidden;
 
-    color: #ffffff;
-    cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 13px;
 
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.14),
-      0 8px 19px rgba(0, 0, 0, 0.18);
+  color: #ffffff;
+  cursor: pointer;
 
-    transition:
-      transform 0.15s,
-      filter 0.2s,
-      box-shadow 0.2s;
-  }
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 8px 19px rgba(0, 0, 0, 0.18);
+
+  transition:
+    transform 0.15s,
+    filter 0.2s,
+    box-shadow 0.2s;
+}
 
   .mainActionButton:hover:not(:disabled) {
     filter: brightness(1.08);
@@ -315,13 +316,15 @@
     transform: scale(0.98);
   }
 
-  .mainActionIcon {
-    display: grid;
-    flex: 0 0 34px;
-    width: 34px;
-    height: 34px;
-    place-items: center;
-  }
+ .mainActionIcon {
+  position: absolute;
+  left: calc(50% - 65px);
+
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+}
 
   .mainActionIcon svg {
     width: 29px;
@@ -333,13 +336,16 @@
     stroke-linejoin: round;
   }
 
-  .mainActionText {
+ .mainActionText {
   display: flex;
   min-width: 0;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
+
+  margin: 0;
+   transform: translateX(10px);
 }
 
 .mainActionTitle {
@@ -620,14 +626,14 @@
 }
 
 #driveStatus {
-  flex: 0 1 auto;
-  max-width: calc(100% - 125px);
+  flex: 1 1 auto;
+  min-width: 0;
 
   text-align: left;
-  white-space: pre-wrap;
+
+  white-space: normal;
   overflow-wrap: anywhere;
 }
- 
 
 .hiddenStatus {
   display: none;
@@ -954,17 +960,16 @@
     }
 
     .mainActionButton {
-      min-height: 62px;
-      padding: 7px 5px;
-      gap: 5px;
-      border-radius: 10px;
-    }
+  min-height: 62px;
+  padding: 7px 5px;
+  border-radius: 10px;
+}
 
-    .mainActionIcon {
-      flex-basis: 25px;
-      width: 25px;
-      height: 25px;
-    }
+   .mainActionIcon {
+  left: calc(50% - 45px);
+  width: 25px;
+  height: 25px;
+}
 
     .mainActionIcon svg {
       width: 22px;
@@ -1435,13 +1440,9 @@
 
   <div class="compactStatusRow">
 
-  <p id="xyDisplay">
-    X：0.00　Y：0.00
-  </p>
+  <p id="xyDisplay">X：0.00　Y：0.00</p>
 
-  <p id="driveStatus">
-    操縦命令：未受信
-  </p>
+<p id="driveStatus">操縦命令：未受信</p>
 
   <p id="status" class="hiddenStatus">
     どちらかのボタンを押してください。
@@ -2230,8 +2231,7 @@ function applyDriveStopState(stopped) {
 
     if (!settingsPanel.open) {
       driveStatusElement.textContent =
-        "非常停止中です。\n" +
-        "再開するには「解除」を押してください。";
+        "非常停止中です。再開するには「解除」を押してください。";
     }
 
   } else {
@@ -2240,8 +2240,7 @@ function applyDriveStopState(stopped) {
 
     if (!settingsPanel.open) {
       driveStatusElement.textContent =
-        "非常停止を解除しました。\n" +
-        "映像上をクリックして操作を再開してください。";
+        "非常停止を解除しました。映像上をクリックして操作を再開してください。";
     }
   }
 }
@@ -2286,8 +2285,7 @@ function stopDrivingForSettings() {
   }
 
   driveStatusElement.textContent =
-    "詳細設定中です。\n" +
-    "操縦は一時停止しています。";
+    "詳細設定中です。操縦は一時停止しています。";
 }
 
    settingsPanel.addEventListener("toggle", () => {
@@ -2307,8 +2305,7 @@ function stopDrivingForSettings() {
       sendSettingsState(false);
 
       driveStatusElement.textContent =
-        "詳細設定を終了しました。\n" +
-        "「解除」を押すと操縦を再開できます。";
+        "詳細設定を終了しました。「解除」を押すと操縦を再開できます。";
     }
   }
 
@@ -2378,14 +2375,12 @@ if (command.type === "settings-state") {
     applyDriveStopState(true);
 
     driveStatusElement.textContent =
-      "詳細設定中です。\n" +
-      "操縦は一時停止しています。";
+      "詳細設定中です。操縦は一時停止しています。";
 
   } else {
 
     driveStatusElement.textContent =
-      "詳細設定を終了しました。\n" +
-      "「解除」を押すと操縦を再開できます。";
+      "詳細設定を終了しました。「解除」を押すと操縦を再開できます。";
   }
 
   return;
@@ -2412,8 +2407,7 @@ if (command.type === "drive-stop-state") {
         );
 
         driveStatusElement.textContent =
-          "非常停止中です。\n" +
-          "操縦命令を無視しました。";
+          "非常停止中です。操縦命令を無視しました。";
 
         return;
       }
