@@ -580,53 +580,43 @@
     padding: 12px;
   }
 
-  .statusGrid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-    gap: 8px;
-    margin-bottom: 10px;
-  }
+  .compactStatusRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 9px;
+}
 
-  #status,
-  #driveStatus {
-    min-height: 48px;
-    margin: 0;
-    padding: 10px 12px;
-    border-radius: 9px;
-    white-space: pre-wrap;
-    font-size: 13px;
-    line-height: 1.5;
-  }
+#driveStatus,
+#xyDisplay {
+  display: inline-flex;
+  align-items: center;
 
-  #status {
-    border: 1px solid rgba(255, 217, 106, 0.18);
-    background: rgba(88, 70, 17, 0.42);
-    color: #fff2bd;
-  }
+  min-height: 31px;
+  margin: 0;
+  padding: 6px 10px;
 
-  #driveStatus {
-    border: 1px solid rgba(105, 162, 255, 0.17);
-    background: rgba(21, 52, 101, 0.38);
-    color: #cfdefb;
-  }
+  border: 1px solid rgba(129, 157, 210, 0.16);
+  border-radius: 999px;
 
-  #xyDisplay {
-    display: inline-flex;
-    align-items: center;
-    min-height: 31px;
-    margin: 0 0 9px;
-    padding: 6px 10px;
-    border: 1px solid rgba(129, 157, 210, 0.16);
-    border-radius: 999px;
-    background: rgba(4, 12, 28, 0.72);
-    color: #dce7ff;
-    font-family:
-      ui-monospace,
-      SFMono-Regular,
-      Consolas,
-      monospace;
-    font-size: 12px;
-  }
+  background: rgba(4, 12, 28, 0.72);
+  color: #dce7ff;
+
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: pre-wrap;
+}
+
+.hiddenStatus {
+  display: none;
+}
 
   /* ======================================
      映像領域
@@ -986,25 +976,17 @@
       font-size: 12px;
     }
 
-    .statusGrid {
-      grid-template-columns: 1fr;
-      gap: 6px;
-      margin-bottom: 7px;
-    }
+    .compactStatusRow {
+  gap: 5px;
+  margin-bottom: 6px;
+}
 
-    #status,
-    #driveStatus {
-      min-height: 39px;
-      padding: 7px 9px;
-      font-size: 10px;
-    }
-
-    #xyDisplay {
-      min-height: 26px;
-      margin-bottom: 6px;
-      padding: 4px 8px;
-      font-size: 10px;
-    }
+#driveStatus,
+#xyDisplay {
+  min-height: 26px;
+  padding: 4px 8px;
+  font-size: 10px;
+}
 
     #videoWrapper {
       border-radius: 9px;
@@ -1433,19 +1415,21 @@
 
       <div class="statusGrid">
 
-        <p id="status">
-          どちらかのボタンを押してください。
-        </p>
+        <div class="compactStatusRow">
 
-        <p id="driveStatus">
-          操縦命令：未受信
-        </p>
+  <p id="driveStatus">
+    操縦命令：未受信
+  </p>
 
-      </div>
+  <p id="xyDisplay">
+    X：0.00　Y：0.00
+  </p>
 
-      <p id="xyDisplay">
-        X：0.00　Y：0.00
-      </p>
+  <p id="status" class="hiddenStatus">
+    どちらかのボタンを押してください。
+  </p>
+
+</div>
 
 
       <!-- 映像・ジョイスティック・STOPボタン -->
